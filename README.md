@@ -27,7 +27,7 @@ Created as part of a fullstack software engineering program using CI/CD, Docker,
 - 📅 Due dates and overdue detection  
 - 🔁 Sync shared tasks to multiple users' Google Calendar  
 - 📊 Timeline for tracking each user's task progress  
-- 🧠 Smarter logic for scoring and gamification leveling  
+
 - 💬 Notifications and collaborative task feedback  
 
 ---
