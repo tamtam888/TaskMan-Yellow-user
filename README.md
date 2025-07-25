@@ -1,33 +1,46 @@
 # TaskMan 🕹️
 
-**TaskMan** is a retro-inspired task management app built with **React** and designed to turn productivity into a game.  
-This project was developed as part of a professional software engineering track using modern development workflows, CI/CD, testing, Docker, and Git best practices.
+**TaskMan** is a retro-inspired task management app built with **React**  
+that turns productivity into a game.  
+Created as part of a fullstack software engineering program using CI/CD, Docker, testing, and Git best practices.
 
 ---
 
 ## ✨ Features
 
-- ✅ Add, complete, and delete tasks
-- ✅ Prioritize tasks (😡 High, 🤔 Normal, 🤢 Low)
-- ✅ Filter tasks by status (All / Active / Completed)
-- ✅ Pixel-style retro UI & animations
-- ✅ Mobile responsive design
-- ✅ Google Sign-In for user authentication
-- ⏳ Due dates and overdue detection *(in progress)*
-- 📅 Timeline view and calendar sync *(planned)*
-- 🔒 Input validation and logging for secure user interaction
+- ✅ Add, complete, and delete tasks  
+- ✅ Prioritize tasks: 😡 High | 🤔 Normal | 🤢 Low  
+- ✅ Filter tasks by category:  
+  **All / 🛒 Shopping / 🎯 Mission / 🌀 Other / ✅ Completed!!**  
+- ✅ Organize tasks into separate lists by category  
+- ✅ Track score and level based on task completion  
+- ✅ Toggle between **Game Mode 🎮** and **Classic Mode 💾**  
+- ✅ Google Sign-In for per-user authentication  
+- ✅ Each user's tasks, score, and level are saved locally  
+- ✅ Mobile responsive retro pixel-style UI  
+
+---
+
+## 🧠 Planned Features
+
+- 📝 Edit existing tasks (in progress)  
+- 📅 Due dates and overdue detection  
+- 🔁 Sync shared tasks to multiple users' Google Calendar  
+- 📊 Timeline for tracking each user's task progress  
+- 🧠 Smarter logic for scoring and gamification leveling  
+- 💬 Notifications and collaborative task feedback  
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React (Functional Components + Hooks)
-- **Styling**: Custom CSS, Responsive Design
-- **Auth**: Google OAuth (via `@react-oauth/google`)
-- **Testing**: Jest + React Testing Library *(unit & integration)*
-- **CI/CD**: GitHub Actions
-- **Containerization**: Docker & DockerHub
-- **Dev Tools**: ESLint, Prettier, Husky, Lightning (code styling)
+- **Frontend**: React (Functional Components + Hooks)  
+- **Auth**: Google OAuth2 (via `@react-oauth/google`)  
+- **Styling**: Custom CSS (Retro-inspired + Responsive)  
+- **Testing**: Jest + React Testing Library  
+- **CI/CD**: GitHub Actions  
+- **Containerization**: Docker & DockerHub  
+- **Dev Tools**: ESLint, Prettier, Husky, Lightning  
 
 ---
 
