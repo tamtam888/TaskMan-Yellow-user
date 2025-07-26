@@ -8,12 +8,11 @@ function TaskList({
   removeTask,
   eatingTaskId,
   tab,
-  onEditTask, // ⬅️ פונקציה לעריכת משימה
+  onEditTask,
 }) {
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editText, setEditText] = useState("");
 
-  // סינון משימות לפי טאב
   const filteredTasks = tasks.filter((task) => {
     if (tab === "all") return true;
     if (tab === "done") return task.completed;
@@ -23,7 +22,7 @@ function TaskList({
   return (
     <ul className="task-list">
       {filteredTasks.map((task) => (
-        <li key={task.id} className="task-list-item">
+        <div key={task.id} className="task-list-item">
           {editingTaskId === task.id ? (
             <input
               className="edit-input"
@@ -58,7 +57,7 @@ function TaskList({
                   className="edit-button"
                   onClick={() => {
                     setEditingTaskId(task.id);
-                    setEditText(task.title);
+                    setEditText(task.text);
                   }}
                 >
                   🖉
@@ -66,7 +65,7 @@ function TaskList({
               )}
             </>
           )}
-        </li>
+        </div>
       ))}
     </ul>
   );

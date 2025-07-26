@@ -1,8 +1,11 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import TaskInput from "./TaskInput";
 
-// פונקציה מדומה
 const mockAddTask = jest.fn();
+
+beforeAll(() => {
+  global.alert = jest.fn(); // למנוע שגיאת alert
+});
 
 describe("TaskInput", () => {
   beforeEach(() => {
@@ -10,27 +13,39 @@ describe("TaskInput", () => {
   });
 
   afterEach(() => {
-    mockAddTask.mockClear(); // נקה קריאות בין טסטים
+    mockAddTask.mockClear();
   });
 
-  test("מזין טקסט ומוסיף משימה", () => {
-    const input = screen.getByPlaceholderText(/add a task/i);
-    const addButton = screen.getByRole("button", { name: /add/i });
+  test("fills all fields and adds a task", () => {
+    fireEvent.change(screen.getByPlaceholderText("🎮 What’s your next mission?"), {
+      target: { value: "Buy cheese" },
+    });
+    fireEvent.change(screen.getByLabelText("Priority"), {
+      target: { value: "high" },
+    });
+    fireEvent.change(screen.getByLabelText("Category"), {
+      target: { value: "Shopping" },
+    });
+    fireEvent.change(screen.getByLabelText("Deadline"), {
+      target: { value: "2025-08-01" },
+    });
 
-    fireEvent.change(input, { target: { value: "לקנות גבינה צהובה" } });
-    fireEvent.click(addButton);
+    fireEvent.click(screen.getByText("+ Add"));
 
     expect(mockAddTask).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: "לקנות גבינה צהובה",
-      })
+      "Buy cheese",
+      "high",
+      expect.any(String),
+      "Shopping",
+      "2025-08-01"
     );
   });
 
-  test("לא מוסיף משימה אם אין טקסט", () => {
-    const addButton = screen.getByRole("button", { name: /add/i });
-
-    fireEvent.click(addButton);
+  test("does not add task if required field is missing", () => {
+    fireEvent.change(screen.getByPlaceholderText("🎮 What’s your next mission?"), {
+      target: { value: "Incomplete" },
+    });
+    fireEvent.click(screen.getByText("+ Add"));
 
     expect(mockAddTask).not.toHaveBeenCalled();
   });
