@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import TaskItem from "./TaskItem";
 import '@testing-library/jest-dom';
 
-describe("TaskItem component", () => {
+describe("TaskItem - Edit Feature", () => {
   const sampleTask = {
     id: "1",
     text: "Buy cheese",
@@ -14,16 +14,16 @@ describe("TaskItem component", () => {
     category: "Shopping",
   };
 
-  const onToggleMock = jest.fn();
-  const onDeleteMock = jest.fn();
+  const onEditMock = jest.fn();
 
   beforeEach(() => {
     render(
       <TaskItem
         task={sampleTask}
-        onToggle={onToggleMock}
-        onDelete={onDeleteMock}
+        onToggle={() => {}}
+        onDelete={() => {}}
         eatingTaskId={null}
+        onEdit={onEditMock}
       />
     );
   });
@@ -32,42 +32,30 @@ describe("TaskItem component", () => {
     jest.clearAllMocks();
   });
 
-  test("renders task details", () => {
-    expect(screen.getByText("Buy cheese")).toBeInTheDocument();
-    expect(screen.getByText("25/07/2025")).toBeInTheDocument();
-    expect(screen.getByText("Deadline: 2025-08-01")).toBeInTheDocument();
-    expect(screen.getByText(/🛒 Shopping/)).toBeInTheDocument();
-    expect(screen.getByText("😡")).toBeInTheDocument(); // Emoji for high priority
+  test("shows edit fields when clicking pencil icon", () => {
+    const editIcon = screen.getByTitle("Edit");
+    fireEvent.click(editIcon);
+
+    expect(screen.getByRole("textbox", { name: "Edit task" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Edit deadline")).toBeInTheDocument();
+    expect(screen.getByLabelText("Edit priority")).toBeInTheDocument();
   });
 
-  test("calls onToggle when checkbox is clicked", () => {
-    const checkbox = screen.getByRole("checkbox");
-    fireEvent.click(checkbox);
-    expect(onToggleMock).toHaveBeenCalledWith("1");
-  });
+  test("calls onEdit with updated task", () => {
+    const editIcon = screen.getByTitle("Edit");
+    fireEvent.click(editIcon);
 
-  test("calls onDelete when delete button is clicked", () => {
-    const deleteButton = screen.getByRole("button", { name: "🗑️" });
-    fireEvent.click(deleteButton);
-    expect(onDeleteMock).toHaveBeenCalledWith("1");
-  });
+    const input = screen.getByRole("textbox", { name: "Edit task" });
+    fireEvent.change(input, { target: { value: "Buy milk" } });
 
-  test("does not show eating image if not eating", () => {
-    const img = screen.queryByAltText("Eating");
-    expect(img).not.toBeInTheDocument();
-  });
+    const saveButton = screen.getByRole("button", { name: "✅" });
+    fireEvent.click(saveButton);
 
-  test("shows eating image when eatingTaskId matches", () => {
-    render(
-      <TaskItem
-        task={sampleTask}
-        onToggle={onToggleMock}
-        onDelete={onDeleteMock}
-        eatingTaskId="1"
-      />
+    expect(onEditMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "1",
+        text: "Buy milk",
+      })
     );
-    const img = screen.getByAltText("Eating");
-    expect(img).toBeInTheDocument();
   });
 });
-

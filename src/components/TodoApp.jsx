@@ -5,7 +5,6 @@ import Tabs from "./Tabs";
 import "../App.css";
 
 function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
-  // אם לא נשלח setTasks מבחוץ – נשתמש ב־useState פנימי
   const [internalTasks, internalSetTasks] = useState(tasks);
   const [tab, setTab] = useState("all");
   const [eatingTaskId, setEatingTaskId] = useState(null);
@@ -30,16 +29,14 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
     const updatedTasks = actualTasks.map((task) =>
       task.id === id ? { ...task, completed: !task.completed } : task
     );
-
     setTasks(updatedTasks);
 
-    // אפקט פקמן כשמשימה בוצעה
     const completedTask = updatedTasks.find(
       (task) => task.id === id && task.completed
     );
     if (completedTask) {
       setEatingTaskId(id);
-      setTimeout(() => setEatingTaskId(null), 2000); // אחרי 2 שניות תעלים את פקמן
+      setTimeout(() => setEatingTaskId(null), 2000);
     }
   };
 
@@ -47,11 +44,12 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
     setTasks(actualTasks.filter((task) => task.id !== id));
   };
 
-  const editTask = (id, newText) => {
-    const updated = actualTasks.map((task) =>
-      task.id === id ? { ...task, text: newText } : task
+  // ✅ פונקציה חדשה שתומכת בעריכה של כל שדות המשימה
+  const handleEditTask = (updatedTask) => {
+    const updatedTasks = actualTasks.map((task) =>
+      task.id === updatedTask.id ? { ...task, ...updatedTask } : task
     );
-    setTasks(updated);
+    setTasks(updatedTasks);
   };
 
   return (
@@ -67,7 +65,6 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       </header>
 
       <TaskInput onAddTask={addTask} />
-
       <Tabs activeTab={tab} onTabChange={setTab} />
 
       <TaskList
@@ -76,7 +73,7 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
         removeTask={removeTask}
         eatingTaskId={eatingTaskId}
         tab={tab}
-        onEditTask={editTask}
+        onEditTask={handleEditTask} // 👈 מעביר לפנים את הפונקציה החדשה
       />
 
       <div className="signature">© TM by TK ~ 2025</div>
@@ -85,3 +82,4 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
+

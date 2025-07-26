@@ -1,10 +1,11 @@
 .input-task-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* כדי שהכול יישאר באותה שורה */
   gap: 12px;
   align-items: center;
   justify-content: center;
   margin: 24px 0 32px;
+  overflow-x: auto; /* לאפשר גלילה אם חסר מקום */
 }
 
 .input-task-container input[type="text"],
@@ -14,21 +15,45 @@
   font-size: 14px;
   color: #000;
   border: 2px solid brown;
-  border-radius: 20px; /* יותר עגול */
-  box-sizing: border-box;
+  border-radius: 20px;
   background-color: white;
   outline: none;
-  min-width: 120px; /* יותר צר */
+  min-width: 100px;
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* שדה המשימה */
 .input-task-container input[type="text"] {
-  width: 220px;
+  width: 26ch;
 }
 
+/* שדה התאריך מסוג date */
+.input-task-container input[type="date"],
+.input-task-container .deadline-date-input {
+  padding: 10px;
+  font-size: 14px;
+  width: 9ch !important; /* קובע את הרוחב */
+  min-width: unset !important;
+  max-width: unset !important;
+  border: 2px solid brown;
+  border-radius: 20px;
+  background-color: white;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* אפקט פוקוס אחיד */
+.input-task-container input:focus,
+.input-task-container select:focus {
+  border-color: #a52a2a;
+  box-shadow: 0 0 4px rgba(165, 42, 42, 0.4);
+}
+
+/* כפתור הוספה */
 .input-task-container button {
-  margin-left: 8px;
   background-color: #fff1e0;
   color: #a0522d;
   border: 2px solid brown;
@@ -37,12 +62,13 @@
   font-weight: bold;
   border-radius: 20px;
   font-style: italic;
-  min-width: 10px; /* יותר צר */
+  min-width: 10px;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .input-task-container button:hover {
   background-color: #ffe0b3;
-  box-shadow: 0 4px 8px rgba(255, 200, 150, 0.2);
+  box-shadow: 0 6px 12px rgba(255, 200, 150, 0.3);
+  transform: scale(1.02);
 }

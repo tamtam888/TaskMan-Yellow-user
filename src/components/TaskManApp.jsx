@@ -17,7 +17,7 @@ const TaskManApp = ({
   setScore,
   level,
   setLevel,
-  user, // ✅ נוספה התמיכה ביוזר
+  user,
 }) => {
   const [tab, setTab] = useState("all");
   const [showLevelUp, setShowLevelUp] = useState(false);
@@ -29,13 +29,14 @@ const TaskManApp = ({
     audio.play();
   };
 
-  const handleAddTask = (text, priority, date, category) => {
+  const handleAddTask = (text, priority, date, category, deadline) => {
     const newTask = {
       id: Date.now(),
       text,
       priority,
       date,
       category,
+      deadline,
       completed: false,
     };
     setTasks([...tasks, newTask]);
@@ -89,13 +90,20 @@ const TaskManApp = ({
     );
   };
 
+  const handleEditTask = (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  };
+
   const handleRestart = () => {
     setTasks([]);
     setScore(0);
     setLevel(1);
     setGameOver(false);
 
-    // ✅ מוחק לפי היוזר
     if (user) {
       localStorage.removeItem(`taskman-tasks-${user.email}`);
       localStorage.removeItem(`taskman-score-${user.email}`);
@@ -152,6 +160,7 @@ const TaskManApp = ({
           toggleTaskCompleted={handleToggleTaskCompleted}
           eatingTaskId={eatingTaskId}
           tab={tab}
+          onEditTask={handleEditTask} // ✅ הכי חשוב – זה מה שהיה חסר!
         />
       )}
 
