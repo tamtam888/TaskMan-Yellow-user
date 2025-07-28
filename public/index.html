@@ -1,43 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+import React from "react";
+import { render, screen, fireEvent } from "@testing-library/react";
+import TaskItem from "./TaskItem";
+import '@testing-library/jest-dom';
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="theme-color" content="#000000">
-	<!--
-      manifest.json provides metadata used when your web app is added to the
-      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
-    -->
-	<link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-	<link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-	<!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+describe("TaskItem - Edit Feature", () => {
+  const sampleTask = {
+    id: "1",
+    text: "Buy cheese",
+    priority: "high",
+    completed: false,
+    date: "25/07/2025",
+    deadline: "2025-08-01",
+    category: "Shopping",
+  };
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-	<title>React App</title>
-</head>
+  const onEditMock = jest.fn();
 
-<body>
-	<noscript>
-		You need to enable JavaScript to run this app.
-	</noscript>
-	<div id="root"></div>
-	<!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+  beforeEach(() => {
+    render(
+      <TaskItem
+        task={sampleTask}
+        onToggle={() => {}}
+        onDelete={() => {}}
+        eatingTaskId={null}
+        onEdit={onEditMock}
+      />
+    );
+  });
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-</body>
+  test("shows edit fields when clicking pencil icon", () => {
+    const editIcon = screen.getByTitle("Edit");
+    fireEvent.click(editIcon);
 
-</html>
+    expect(screen.getByRole("textbox", { name: "Edit task" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Edit deadline")).toBeInTheDocument();
+    expect(screen.getByLabelText("Edit priority")).toBeInTheDocument();
+  });
+
+  test("calls onEdit with updated task", () => {
+    const editIcon = screen.getByTitle("Edit");
+    fireEvent.click(editIcon);
+
+    const input = screen.getByRole("textbox", { name: "Edit task" });
+    fireEvent.change(input, { target: { value: "Buy milk" } });
+
+    const saveButton = screen.getByRole("button", { name: "✅" });
+    fireEvent.click(saveButton);
+
+    expect(onEditMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "1",
+        text: "Buy milk",
+      })
+    );
+  });
+});
