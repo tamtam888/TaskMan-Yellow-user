@@ -3,12 +3,14 @@ import Title from "./Title";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
 import DoneStatusTabs from "./DoneStatusTabs";
-import addSound from "../sounds/add.mp3";
-import completeSound from "../sounds/complete.mp3";
-import deleteSound from "../sounds/trash.mp3";
-import levelupSound from "../sounds/levelap.mp3";
-import gameoverSound from "../sounds/gameover.mp3";
 import "./TaskManApp.css";
+
+// ✅ הפנייה לתיקיית public/sounds
+const addSound = process.env.PUBLIC_URL + "/sounds/add.mp3";
+const completeSound = process.env.PUBLIC_URL + "/sounds/complete.mp3";
+const deleteSound = process.env.PUBLIC_URL + "/sounds/trash.mp3";
+const levelupSound = process.env.PUBLIC_URL + "/sounds/levelap.mp3";
+const gameoverSound = process.env.PUBLIC_URL + "/sounds/gameover.mp3";
 
 const TaskManApp = ({
   tasks,
