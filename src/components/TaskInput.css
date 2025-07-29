@@ -1,11 +1,11 @@
 .input-task-container {
   display: flex;
-  flex-wrap: nowrap; /* כדי שהכול יישאר באותה שורה */
+  flex-wrap: nowrap; /* בשגרה נשארים באותה שורה */
   gap: 12px;
   align-items: center;
   justify-content: center;
   margin: 24px 0 32px;
-  overflow-x: auto; /* לאפשר גלילה אם חסר מקום */
+  overflow-x: hidden; /* לא מציג פס גלילה כברירת מחדל */
 }
 
 .input-task-container input[type="text"],
@@ -18,22 +18,20 @@
   border-radius: 20px;
   background-color: white;
   outline: none;
-  min-width: 100px;
+  width: auto;
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* שדה המשימה */
 .input-task-container input[type="text"] {
-  width: 26ch;
+  width: 25ch;
 }
 
-/* שדה התאריך מסוג date */
 .input-task-container input[type="date"],
 .input-task-container .deadline-date-input {
   padding: 10px;
   font-size: 14px;
-  width: 9ch !important; /* קובע את הרוחב */
+  width: 9ch !important;
   min-width: unset !important;
   max-width: unset !important;
   border: 2px solid brown;
@@ -45,14 +43,12 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* אפקט פוקוס אחיד */
 .input-task-container input:focus,
 .input-task-container select:focus {
   border-color: #a52a2a;
   box-shadow: 0 0 4px rgba(165, 42, 42, 0.4);
 }
 
-/* כפתור הוספה */
 .input-task-container button {
   background-color: #fff1e0;
   color: #a0522d;
@@ -71,4 +67,21 @@
   background-color: #ffe0b3;
   box-shadow: 0 6px 12px rgba(255, 200, 150, 0.3);
   transform: scale(1.02);
+}
+
+/* 🌐 רספונסיביות למסכים קטנים */
+@media (max-width: 768px) {
+  .input-task-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .input-task-container input,
+  .input-task-container select,
+  .input-task-container .deadline-date-input,
+  .input-task-container button {
+    flex: 1 1 100%;
+    max-width: 90%;
+  }
 }

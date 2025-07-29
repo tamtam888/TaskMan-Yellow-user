@@ -143,3 +143,8 @@
   text-align: right !important;
   unicode-bidi: plaintext;
 }
+.task-text {
+  display: block;
+  white-space: normal;
+  word-break: break-word;
+}

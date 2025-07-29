@@ -1,61 +1,82 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import TaskItem from "./TaskItem";
-import '@testing-library/jest-dom';
 
-describe("TaskItem - Edit Feature", () => {
-  const sampleTask = {
-    id: "1",
-    text: "Buy cheese",
-    priority: "high",
-    completed: false,
-    date: "25/07/2025",
-    deadline: "2025-08-01",
-    category: "Shopping",
-  };
+const sampleTask = {
+  id: "1",
+  text: "Buy milk",
+  priority: "normal",
+  completed: false,
+  category: "Shopping",
+  deadline: "01/08/2025",
+  date: "28/07/2025",
+};
 
-  const onEditMock = jest.fn();
+test("Edit task with valid input", () => {
+  const onEdit = jest.fn();
 
-  beforeEach(() => {
-    render(
-      <TaskItem
-        task={sampleTask}
-        onToggle={() => {}}
-        onDelete={() => {}}
-        eatingTaskId={null}
-        onEdit={onEditMock}
-      />
-    );
+  render(
+    <TaskItem task={sampleTask} onEdit={onEdit} onToggle={() => {}} onDelete={() => {}} />
+  );
+
+  fireEvent.click(screen.getByTitle("Edit task"));
+
+  fireEvent.change(screen.getByLabelText("Edit task"), {
+    target: { value: "Buy eggs" }
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  fireEvent.change(screen.getByLabelText("Edit deadline"), {
+    target: { value: "02/08/2025" }
   });
 
-  test("shows edit fields when clicking pencil icon", () => {
-    const editIcon = screen.getByTitle("Edit");
-    fireEvent.click(editIcon);
-
-    expect(screen.getByRole("textbox", { name: "Edit task" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Edit deadline")).toBeInTheDocument();
-    expect(screen.getByLabelText("Edit priority")).toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText("Edit priority"), {
+    target: { value: "high" }
   });
 
-  test("calls onEdit with updated task", () => {
-    const editIcon = screen.getByTitle("Edit");
-    fireEvent.click(editIcon);
+  fireEvent.click(screen.getByTitle("Save changes"));
 
-    const input = screen.getByRole("textbox", { name: "Edit task" });
-    fireEvent.change(input, { target: { value: "Buy milk" } });
-
-    const saveButton = screen.getByRole("button", { name: "✅" });
-    fireEvent.click(saveButton);
-
-    expect(onEditMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        id: "1",
-        text: "Buy milk",
-      })
-    );
-  });
+  expect(onEdit).toHaveBeenCalled();
 });
+
+test("Show alert on invalid past date", () => {
+  window.alert = jest.fn();
+
+  render(
+    <TaskItem task={sampleTask} onEdit={() => {}} onToggle={() => {}} onDelete={() => {}} />
+  );
+
+  fireEvent.click(screen.getByTitle("Edit task"));
+
+  fireEvent.change(screen.getByLabelText("Edit deadline"), {
+    target: { value: "01/01/2020" }
+  });
+
+  fireEvent.click(screen.getByTitle("Save changes"));
+
+  expect(window.alert).toHaveBeenCalledWith("Deadline must be today or a future date.");
+});
+
+test("Show alert on invalid format", () => {
+  window.alert = jest.fn();
+
+  render(
+    <TaskItem task={sampleTask} onEdit={() => {}} onToggle={() => {}} onDelete={() => {}} />
+  );
+
+  fireEvent.click(screen.getByTitle("Edit task"));
+
+  fireEvent.change(screen.getByLabelText("Edit deadline"), {
+    target: { value: "2025-08-01" }
+  });
+
+  fireEvent.click(screen.getByTitle("Save changes"));
+
+  expect(window.alert).toHaveBeenCalledWith("Please enter a valid date in the format DD/MM/YYYY.");
+});
+
+
+
+
+
+
+

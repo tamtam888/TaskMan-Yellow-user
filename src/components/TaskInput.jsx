@@ -8,28 +8,42 @@ function TaskInput({ onAddTask }) {
   const [inputValue, setInputValue] = useState("");
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
-  const [deadline, setDeadline] = useState(null);
+  const [deadline, setDeadline] = useState(new Date());
 
   const handleAdd = () => {
     const trimmedValue = inputValue.trim();
-    if (trimmedValue && priority && category && deadline) {
-      const now = new Date();
-      const creationDate = format(now, "dd/MM/yyyy");
-      const deadlineFormatted = format(deadline, "dd/MM/yyyy");
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
 
-      onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted);
-      setInputValue("");
-      setPriority("");
-      setCategory("");
-      setDeadline(null);
-    } else {
+    if (!trimmedValue || !priority || !category || !deadline) {
       alert("Please enter all fields: mission, priority, category, and deadline!");
+      return;
     }
+
+    if (Object.prototype.toString.call(deadline) !== "[object Date]" || isNaN(deadline)) {
+      alert("Invalid date format. Please enter a valid date.");
+      return;
+    }
+
+    const deadlineDate = new Date(deadline);
+    deadlineDate.setHours(0, 0, 0, 0);
+    if (deadlineDate < now) {
+      alert("Deadline must be today or a future date.");
+      return;
+    }
+
+    const creationDate = format(now, "dd/MM/yyyy");
+    const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
+
+    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted);
+    setInputValue("");
+    setPriority("");
+    setCategory("");
+    setDeadline(new Date());
   };
 
   return (
     <div className="input-task-container">
-      <label htmlFor="task-input" style={{ display: "none" }}>Task</label>
       <input
         id="task-input"
         type="text"
@@ -39,7 +53,6 @@ function TaskInput({ onAddTask }) {
         aria-label="Task"
       />
 
-      <label htmlFor="priority-select" style={{ display: "none" }}>Priority</label>
       <select
         id="priority-select"
         value={priority}
@@ -53,7 +66,6 @@ function TaskInput({ onAddTask }) {
         <option value="low">🤢 Low</option>
       </select>
 
-      <label htmlFor="category-select" style={{ display: "none" }}>Category</label>
       <select
         id="category-select"
         value={category}
@@ -67,13 +79,13 @@ function TaskInput({ onAddTask }) {
         <option value="other">💡 Other</option>
       </select>
 
-      <label htmlFor="deadline-datepicker" style={{ display: "none" }}>Deadline</label>
       <DatePicker
         id="deadline-datepicker"
         selected={deadline}
         onChange={(date) => setDeadline(date)}
         dateFormat="dd/MM/yyyy"
         placeholderText="📅 DD/MM/YYYY"
+        minDate={new Date()}
         className="deadline-date-input"
         aria-label="Deadline"
       />
