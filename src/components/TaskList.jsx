@@ -8,8 +8,8 @@ function TaskList({
   removeTask,
   eatingTaskId,
   tab,
-  onEditTask,
 }) {
+  // ✨ סינון משימות לפי הטאב הנבחר
   const filteredTasks = tasks.filter((task) => {
     if (tab === "all") return true;
     if (tab === "done") return task.completed;
@@ -19,15 +19,13 @@ function TaskList({
   return (
     <ul className="task-list">
       {filteredTasks.map((task) => (
-        <div key={task.id} className="task-list-item">
-          <TaskItem
-            task={task}
-            onToggle={toggleTaskCompleted}
-            onDelete={() => removeTask(task.id)}
-            eatingTaskId={eatingTaskId}
-            onEdit={onEditTask} // חובה כדי שהתעדכון ישפיע בפועל
-          />
-        </div>
+        <TaskItem
+          key={task.id}
+          task={task}
+          onToggle={toggleTaskCompleted}
+          onDelete={() => removeTask(task.id)}
+          eatingTaskId={eatingTaskId}
+        />
       ))}
     </ul>
   );
