@@ -2,7 +2,6 @@ import React from "react";
 import "./TaskItem.css";
 
 function TaskItem({ task, onToggle, onDelete, eatingTaskId }) {
-  // הגדרת אייקון לקטגוריה
   const getCategoryIcon = (category) => {
     switch (category) {
       case "Shopping":
@@ -18,9 +17,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId }) {
 
   return (
     <li
-      className={`task-item ${task.priority} ${
-        task.completed ? "completed" : ""
-      }`}
+      className={`task-item ${task.priority} ${task.completed ? "completed" : ""}`}
     >
       <input
         type="checkbox"
@@ -33,13 +30,13 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId }) {
           ? "😡"
           : task.priority === "normal"
           ? "🤔"
-          : "🤢"}
+          : "🨢"}
       </span>
 
       <span className="task-text">{task.text}</span>
       <span className="task-date">{task.date}</span>
+      <span className="task-deadline">Deadline: {task.deadline}</span>
 
-      {/* 🏷️ הצגת קטגוריה */}
       <span className="task-category">
         {getCategoryIcon(task.category)} {task.category}
       </span>
