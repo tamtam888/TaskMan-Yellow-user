@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
-import Tabs from "./Tabs";
+import Tabs from "./DoneStatusTabs ";
 import "../App.css";
 
 function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
