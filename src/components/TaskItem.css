@@ -90,5 +90,61 @@
   margin-top: auto;
   text-align: right;
   font-style: italic;
+  direction: ltr;
   width: 100%;
+}
+
+
+/* 🖉 כפתור עריכה */
+.edit-btn {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background: #ffd700;
+  border: none;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: background 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #ffbf00;
+}
+
+/* טופס עריכה */
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.edit-form input,
+.edit-form select {
+  padding: 6px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  direction: rtl;
+  text-align: right;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+.edit-form input[type="text"][placeholder*="DD/MM/YYYY"] {
+  direction: rtl !important;
+  text-align: right !important;
+  unicode-bidi: plaintext;
+}
+.task-text {
+  display: block;
+  white-space: normal;
+  word-break: break-word;
 }

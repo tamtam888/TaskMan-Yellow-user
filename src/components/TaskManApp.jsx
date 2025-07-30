@@ -3,12 +3,14 @@ import Title from "./Title";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
 import DoneStatusTabs from "./DoneStatusTabs";
-import addSound from "../sounds/add.mp3";
-import completeSound from "../sounds/complete.mp3";
-import deleteSound from "../sounds/trash.mp3";
-import levelupSound from "../sounds/levelap.mp3";
-import gameoverSound from "../sounds/gameover.mp3";
 import "./TaskManApp.css";
+
+// ✅ הפנייה לתיקיית public/sounds
+const addSound = process.env.PUBLIC_URL + "/sounds/add.mp3";
+const completeSound = process.env.PUBLIC_URL + "/sounds/complete.mp3";
+const deleteSound = process.env.PUBLIC_URL + "/sounds/trash.mp3";
+const levelupSound = process.env.PUBLIC_URL + "/sounds/levelup.mp3";
+const gameoverSound = process.env.PUBLIC_URL + "/sounds/gameover.mp3";
 
 const TaskManApp = ({
   tasks,
@@ -17,7 +19,7 @@ const TaskManApp = ({
   setScore,
   level,
   setLevel,
-  user, // ✅ נוספה התמיכה ביוזר
+  user,
 }) => {
   const [tab, setTab] = useState("all");
   const [showLevelUp, setShowLevelUp] = useState(false);
@@ -29,13 +31,14 @@ const TaskManApp = ({
     audio.play();
   };
 
-  const handleAddTask = (text, priority, date, category) => {
+  const handleAddTask = (text, priority, date, category, deadline) => {
     const newTask = {
       id: Date.now(),
       text,
       priority,
       date,
       category,
+      deadline,
       completed: false,
     };
     setTasks([...tasks, newTask]);
@@ -89,13 +92,20 @@ const TaskManApp = ({
     );
   };
 
+  const handleEditTask = (updatedTask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      )
+    );
+  };
+
   const handleRestart = () => {
     setTasks([]);
     setScore(0);
     setLevel(1);
     setGameOver(false);
 
-    // ✅ מוחק לפי היוזר
     if (user) {
       localStorage.removeItem(`taskman-tasks-${user.email}`);
       localStorage.removeItem(`taskman-score-${user.email}`);
@@ -152,6 +162,7 @@ const TaskManApp = ({
           toggleTaskCompleted={handleToggleTaskCompleted}
           eatingTaskId={eatingTaskId}
           tab={tab}
+          onEditTask={handleEditTask} // ✅ הכי חשוב – זה מה שהיה חסר!
         />
       )}
 
