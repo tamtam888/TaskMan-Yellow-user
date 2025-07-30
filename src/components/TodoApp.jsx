@@ -1,67 +1,85 @@
-import React, { useState, useEffect } from "react";
-import Title from "./Title";
+import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
-import DoneStatusTabs from "./DoneStatusTabs";
+import Tabs from "./Tabs";
 import "../App.css";
 
-const TodoApp = ({ tasks, setTasks }) => {
+function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
+  const [internalTasks, internalSetTasks] = useState(tasks);
   const [tab, setTab] = useState("all");
+  const [eatingTaskId, setEatingTaskId] = useState(null);
 
-  useEffect(() => {
-    localStorage.setItem("taskman-tasks", JSON.stringify(tasks));
-  }, [tasks]);
+  const actualTasks = externalSetTasks ? tasks : internalTasks;
+  const setTasks = externalSetTasks || internalSetTasks;
 
-  const handleAddTask = (text, priority, date, category) => {
+  const addTask = (text, priority, date, category, deadline) => {
     const newTask = {
-      id: Date.now(),
+      id: Date.now().toString(),
       text,
       priority,
-      date,
-      category,
       completed: false,
+      date,
+      deadline,
+      category,
     };
-    setTasks([...tasks, newTask]);
+    setTasks([newTask, ...actualTasks]);
   };
 
-  const handleRemoveTask = (id) => {
-    setTasks(tasks.filter((task) => task.id !== id));
-  };
-
-  const handleToggleTaskCompleted = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+  const toggleTaskCompleted = (id) => {
+    const updatedTasks = actualTasks.map((task) =>
+      task.id === id ? { ...task, completed: !task.completed } : task
     );
+    setTasks(updatedTasks);
+
+    const completedTask = updatedTasks.find(
+      (task) => task.id === id && task.completed
+    );
+    if (completedTask) {
+      setEatingTaskId(id);
+      setTimeout(() => setEatingTaskId(null), 2000);
+    }
   };
 
-  const filteredTasks = tasks
-    .filter((task) => {
-      if (tab === "all") return true;
-      if (tab === "done") return task.completed;
-      return task.category === tab;
-    })
-    .sort((a, b) => {
-      const priorityOrder = { high: 1, normal: 2, low: 3 };
-      return priorityOrder[a.priority] - priorityOrder[b.priority];
-    });
+  const removeTask = (id) => {
+    setTasks(actualTasks.filter((task) => task.id !== id));
+  };
+
+  // ✅ פונקציה חדשה שתומכת בעריכה של כל שדות המשימה
+  const handleEditTask = (updatedTask) => {
+    const updatedTasks = actualTasks.map((task) =>
+      task.id === updatedTask.id ? { ...task, ...updatedTask } : task
+    );
+    setTasks(updatedTasks);
+  };
 
   return (
     <div className="todo-container">
-      <Title />
+      <header className="title-header">
+        <div className="title-content">
+          <img src="/pacwhite.png" alt="Mdone Icon" className="dane-icon" />
+          <div>
+            <h1>TaskMan</h1>
+            <p className="subtitle">Your task guide to victory!</p>
+          </div>
+        </div>
+      </header>
 
-      <TaskInput onAddTask={handleAddTask} />
-      <DoneStatusTabs tab={tab} setTab={setTab} />
+      <TaskInput onAddTask={addTask} />
+      <Tabs activeTab={tab} onTabChange={setTab} />
+
       <TaskList
-        tasks={filteredTasks}
-        removeTask={handleRemoveTask}
-        toggleTaskCompleted={handleToggleTaskCompleted}
+        tasks={actualTasks}
+        toggleTaskCompleted={toggleTaskCompleted}
+        removeTask={removeTask}
+        eatingTaskId={eatingTaskId}
         tab={tab}
+        onEditTask={handleEditTask} // 👈 מעביר לפנים את הפונקציה החדשה
       />
+
       <div className="signature">© TM by TK ~ 2025</div>
     </div>
   );
-};
+}
 
 export default TodoApp;
+
