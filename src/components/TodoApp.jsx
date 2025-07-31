@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
-import Tabs from "./DoneStatusTabs ";
+import Tabs from "./DoneStatusTabs";
 import "../App.css";
 
 function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
   const [internalTasks, internalSetTasks] = useState(tasks);
   const [tab, setTab] = useState("all");
-  const [eatingTaskId, setEatingTaskId] = useState(null);
 
   const actualTasks = externalSetTasks ? tasks : internalTasks;
   const setTasks = externalSetTasks || internalSetTasks;
@@ -30,21 +29,12 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       task.id === id ? { ...task, completed: !task.completed } : task
     );
     setTasks(updatedTasks);
-
-    const completedTask = updatedTasks.find(
-      (task) => task.id === id && task.completed
-    );
-    if (completedTask) {
-      setEatingTaskId(id);
-      setTimeout(() => setEatingTaskId(null), 2000);
-    }
   };
 
   const removeTask = (id) => {
     setTasks(actualTasks.filter((task) => task.id !== id));
   };
 
-  // ✅ פונקציה חדשה שתומכת בעריכה של כל שדות המשימה
   const handleEditTask = (updatedTask) => {
     const updatedTasks = actualTasks.map((task) =>
       task.id === updatedTask.id ? { ...task, ...updatedTask } : task
@@ -71,9 +61,8 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
         tasks={actualTasks}
         toggleTaskCompleted={toggleTaskCompleted}
         removeTask={removeTask}
-        eatingTaskId={eatingTaskId}
         tab={tab}
-        onEditTask={handleEditTask} // 👈 מעביר לפנים את הפונקציה החדשה
+        onEditTask={handleEditTask}
       />
 
       <div className="signature">© TM by TK ~ 2025</div>
@@ -82,4 +71,5 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
+
 
