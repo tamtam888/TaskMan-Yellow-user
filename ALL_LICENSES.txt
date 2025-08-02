@@ -1,0 +1,19 @@
+MIT: 1134 packages
+ISC: 67 packages
+CC0-1.0: 42 packages
+BSD-2-Clause: 39 packages
+Apache-2.0: 32 packages
+BSD-3-Clause: 31 packages
+Unlicense: 3 packages
+BlueOak-1.0.0: 3 packages
+(MIT OR CC0-1.0): 3 packages
+0BSD: 2 packages
+MIT-0: 1 package
+Python-2.0: 1 package
+MPL-2.0: 1 package
+CC-BY-4.0: 1 package
+BSD: 1 package
+(Apache-2.0 OR MPL-1.1): 1 package
+(AFL-2.1 OR BSD-3-Clause): 1 package
+(BSD-3-Clause OR GPL-2.0): 1 package
+UNLICENSED: 1 package
