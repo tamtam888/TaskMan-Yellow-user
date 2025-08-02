@@ -9,6 +9,7 @@ function TaskInput({ onAddTask }) {
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
   const [deadline, setDeadline] = useState(new Date());
+  const [participants, setParticipants] = useState("");
 
   const handleAdd = () => {
     const trimmedValue = inputValue.trim();
@@ -35,17 +36,22 @@ function TaskInput({ onAddTask }) {
     const creationDate = format(now, "dd/MM/yyyy");
     const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
 
-    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted);
+    const participantsArray = participants
+      .split(",")
+      .map(email => email.trim())
+      .filter(email => email);
+
+    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted, participantsArray);
     setInputValue("");
     setPriority("");
     setCategory("");
     setDeadline(new Date());
+    setParticipants("");
   };
 
   return (
     <div className="input-task-container">
       <input
-        id="task-input"
         type="text"
         placeholder="🎮 What's your next mission?"
         value={inputValue}
@@ -54,7 +60,6 @@ function TaskInput({ onAddTask }) {
       />
 
       <select
-        id="priority-select"
         value={priority}
         onChange={(e) => setPriority(e.target.value)}
         className="priority-select"
@@ -67,7 +72,6 @@ function TaskInput({ onAddTask }) {
       </select>
 
       <select
-        id="category-select"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         className="category-select"
@@ -80,7 +84,6 @@ function TaskInput({ onAddTask }) {
       </select>
 
       <DatePicker
-        id="deadline-datepicker"
         selected={deadline}
         onChange={(date) => setDeadline(date)}
         dateFormat="dd/MM/yyyy"
@@ -88,6 +91,14 @@ function TaskInput({ onAddTask }) {
         minDate={new Date()}
         className="deadline-date-input"
         aria-label="Deadline"
+      />
+
+      <input
+        type="text"
+        placeholder="👥 Add participants (comma-separated)"
+        value={participants}
+        onChange={(e) => setParticipants(e.target.value)}
+        aria-label="Participants"
       />
 
       <button onClick={handleAdd}>+ Add</button>

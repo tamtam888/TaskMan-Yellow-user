@@ -11,7 +11,7 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
   const actualTasks = externalSetTasks ? tasks : internalTasks;
   const setTasks = externalSetTasks || internalSetTasks;
 
-  const addTask = (text, priority, date, category, deadline) => {
+  const addTask = (text, priority, date, category, deadline, users) => {
     const newTask = {
       id: Date.now().toString(),
       text,
@@ -20,6 +20,7 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       date,
       deadline,
       category,
+      users, // 👥 משתתפים
     };
     setTasks([newTask, ...actualTasks]);
   };
@@ -71,5 +72,3 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
-
-

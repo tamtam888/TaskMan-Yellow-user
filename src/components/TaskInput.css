@@ -1,11 +1,10 @@
 .input-task-container {
   display: flex;
-  flex-wrap: nowrap; /* בשגרה נשארים באותה שורה */
+  flex-wrap: wrap;
   gap: 12px;
   align-items: center;
   justify-content: center;
   margin: 24px 0 32px;
-  overflow-x: hidden; /* לא מציג פס גלילה כברירת מחדל */
 }
 
 .input-task-container input[type="text"],
@@ -15,41 +14,32 @@
   font-size: 14px;
   color: #000;
   border: 2px solid brown;
-  border-radius: 20px;
+  border-radius: 20px; /* יותר עגול */
+  box-sizing: border-box;
   background-color: white;
   outline: none;
-  width: auto;
+  min-width: 100px; /* יותר צר */
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-task-container input[type="text"] {
-  width: 25ch;
-}
-
-.input-task-container input[type="date"],
-.input-task-container .deadline-date-input {
+/* שדה תאריך צר */
+.deadline-date-input {
+  width: 100px !important;
   padding: 10px;
   font-size: 14px;
-  width: 9ch !important;
-  min-width: unset !important;
-  max-width: unset !important;
-  border: 2px solid brown;
   border-radius: 20px;
-  background-color: white;
-  outline: none;
-  cursor: pointer;
-  text-align: center;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid brown;
 }
 
-.input-task-container input:focus,
-.input-task-container select:focus {
-  border-color: #a52a2a;
-  box-shadow: 0 0 4px rgba(165, 42, 42, 0.4);
+/* שדה משתתפים רחב יותר */
+.input-task-container input[aria-label="Participants"] {
+  min-width: 220px;
+  width: 280px;
 }
 
 .input-task-container button {
+  margin-left: 8px;
   background-color: #fff1e0;
   color: #a0522d;
   border: 2px solid brown;
@@ -58,30 +48,12 @@
   font-weight: bold;
   border-radius: 20px;
   font-style: italic;
-  min-width: 10px;
+  min-width: 10px; /* יותר צר */
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .input-task-container button:hover {
   background-color: #ffe0b3;
-  box-shadow: 0 6px 12px rgba(255, 200, 150, 0.3);
-  transform: scale(1.02);
-}
-
-/* 🌐 רספונסיביות למסכים קטנים */
-@media (max-width: 768px) {
-  .input-task-container {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .input-task-container input,
-  .input-task-container select,
-  .input-task-container .deadline-date-input,
-  .input-task-container button {
-    flex: 1 1 100%;
-    max-width: 90%;
-  }
+  box-shadow: 0 4px 8px rgba(255, 200, 150, 0.2);
 }

@@ -37,7 +37,7 @@ Created as part of a fullstack software engineering program using CI/CD, Docker,
 - **Frontend**: React (Functional Components + Hooks)  
 - **Auth**: Google OAuth2 (via `@react-oauth/google`)  
 - **Styling**: Custom CSS (Retro-inspired + Responsive)  
-- **Testing**: Jest + React Testing Library  
+- **Testing**: React Testing Library  
 - **CI/CD**: GitHub Actions  
 - **Containerization**: Docker & DockerHub  
 - **Dev Tools**: ESLint, Prettier, Husky, Lightning  
