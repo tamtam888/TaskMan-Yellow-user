@@ -22,6 +22,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     task.deadline ? formatDateForDisplay(task.deadline) : ""
   );
   const [editedPriority, setEditedPriority] = useState(task.priority);
+  const [editedUsers, setEditedUsers] = useState(task.users?.join(", ") || "");
 
   const getCategoryIcon = (category) => {
     if (category === "Shopping") return "🛒";
@@ -67,6 +68,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
       text: editedText,
       deadline: formatDateForStorage(editedDeadline),
       priority: editedPriority,
+      users: editedUsers.split(",").map((u) => u.trim()).filter(Boolean),
     };
 
     onEdit(updatedTask);
@@ -123,6 +125,13 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
             <option value="normal">Normal</option>
             <option value="low">Low</option>
           </select>
+          <input
+            type="text"
+            value={editedUsers}
+            onChange={(e) => setEditedUsers(e.target.value)}
+            placeholder="Add participants"
+            aria-label="Edit users"
+          />
           <div className="edit-buttons">
             <button onClick={handleSave} title="Save changes">✅</button>
             <button onClick={() => setIsEditing(false)} title="Cancel">❌</button>
@@ -139,16 +148,27 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
             {task.priority === "high" ? "😡" : task.priority === "normal" ? "🤔" : "🤢"}
           </span>
           <span className="task-text">{task.text}</span>
+
+          {task.users && task.users.length > 0 && (
+            <span className="task-users">
+              🧑‍🤝‍🧑 {task.users.join(", ")}
+            </span>
+          )}
+
           {task.deadline && (
             <span className="task-deadline">
               <strong>Deadline:</strong> {formatDateForDisplay(task.deadline)}
             </span>
           )}
+
           <span className="task-category">
             {getCategoryIcon(task.category)} {task.category}
           </span>
+
           {task.date && <span className="task-date">{task.date}</span>}
+
           <button onClick={() => onDelete(task.id)} title="Remove">🗑️</button>
+
           {eatingTaskId === task.id && (
             <img src="/taskman-transparent.png" alt="Eating" className="dane-eat" />
           )}
@@ -159,4 +179,3 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
 }
 
 export default TaskItem;
-
