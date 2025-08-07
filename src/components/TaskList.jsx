@@ -25,7 +25,7 @@ function TaskList({
             onToggle={toggleTaskCompleted}
             onDelete={() => removeTask(task.id)}
             eatingTaskId={eatingTaskId}
-            onEdit={onEditTask} // חובה כדי שהתעדכון ישפיע בפועל
+            onEdit={onEditTask} //  כדי שהתעדכון ישפיע בפועל
           />
         </div>
       ))}

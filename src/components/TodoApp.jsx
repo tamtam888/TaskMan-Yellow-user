@@ -11,7 +11,9 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
   const actualTasks = externalSetTasks ? tasks : internalTasks;
   const setTasks = externalSetTasks || internalSetTasks;
 
-  const addTask = (text, priority, date, category, deadline, users) => {
+  // ✅ משתמשים ב-participants במקום users
+  const addTask = (text, priority, date, category, deadline, participants) => {
+    console.log("🔍 AddTask called with participants:", participants); // הוסיפי שורת בדיקה
     const newTask = {
       id: Date.now().toString(),
       text,
@@ -20,7 +22,7 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       date,
       deadline,
       category,
-      users, // 👥 משתתפים
+      participants, // 👥 נשמר בשם הנכון
     };
     setTasks([newTask, ...actualTasks]);
   };

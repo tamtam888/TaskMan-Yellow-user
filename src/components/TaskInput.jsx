@@ -36,12 +36,12 @@ function TaskInput({ onAddTask }) {
     const creationDate = format(now, "dd/MM/yyyy");
     const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
 
-    const participantsArray = participants
-      .split(",")
-      .map(email => email.trim())
-      .filter(email => email);
+    // שולחת את המשתתפים כטקסט
+    console.log("🧪 Creating task with participants:", participants);
+    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted, participants);
+    
 
-    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted, participantsArray);
+    // איפוס השדות
     setInputValue("");
     setPriority("");
     setCategory("");
