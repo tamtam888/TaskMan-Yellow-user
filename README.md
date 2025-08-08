@@ -1,4 +1,4 @@
-# TaskMan 🕹️
+# TaskMan 🕹️ 
 
 **TaskMan** is a retro-inspired task management app built with **React**  
 that turns productivity into a game.  
@@ -6,12 +6,12 @@ Created as part of a fullstack software engineering program using CI/CD, Docker,
 
 ---
 
-## ✨ Features
+## ✨ Features 
 
 - ✅ Add, complete, and delete tasks  
 - ✅ Prioritize tasks: 😡 High | 🤔 Normal | 🤢 Low  
 - ✅ Filter tasks by category:  
-  **All / 🛒 Shopping / 🎯 Mission / 🌀 Other / ✅ Completed!!**  
+  **All / 🛒 Shopping / 🎯 Mission / 🌀 Other / ✅ Completed!!** 
 - ✅ Organize tasks into separate lists by category  
 - ✅ Track score and level based on task completion  
 - ✅ Toggle between **Game Mode 🎮** and **Classic Mode 💾**  
@@ -42,7 +42,6 @@ Created as part of a fullstack software engineering program using CI/CD, Docker,
 - **Containerization**: Docker & DockerHub  
 - **Dev Tools**: ESLint, Prettier, Husky, Lightning  
 
----
 
 ## 📦 Getting Started
 
