@@ -31,7 +31,23 @@ const TaskManApp = ({
     audio.play();
   };
 
-  const handleAddTask = (text, priority, date, category, deadline) => {
+  // ⬇️⬇️⬇️ שינוי קריטי: מוסיפים participants לפרמטרים + שומרים users/participants ⬇️⬇️⬇️
+  const handleAddTask = (text, priority, date, category, deadline, participants) => {
+    console.log("[TaskManApp] handleAddTask received participants:", participants);
+
+    // נרמול: יכול להגיע כמערך/מחרוזת
+    let usersArray = [];
+    let participantsString = "";
+
+    if (Array.isArray(participants)) {
+      usersArray = participants.filter(Boolean).map((s) => String(s).trim()).filter(Boolean);
+      participantsString = usersArray.join(", ");
+    } else if (typeof participants === "string") {
+      const p = participants.trim();
+      usersArray = p ? p.split(",").map((s) => s.trim()).filter(Boolean) : [];
+      participantsString = usersArray.join(", ");
+    }
+
     const newTask = {
       id: Date.now(),
       text,
@@ -40,11 +56,15 @@ const TaskManApp = ({
       category,
       deadline,
       completed: false,
+      users: usersArray,                // 👥 לעריכה
+      participants: participantsString, // 👥 לתצוגה
     };
-    setTasks([...tasks, newTask]);
+
+    setTasks((prev) => [...prev, newTask]); // שמירה בטוחה
     playSound(addSound);
     setGameOver(false);
   };
+  // ⬆️⬆️⬆️ סוף השינוי הקריטי ⬆️⬆️⬆️
 
   const handleRemoveTask = (id) => {
     setTimeout(() => {
@@ -120,11 +140,7 @@ const TaskManApp = ({
     }
   }, [tasks]);
 
-  const priorityOrder = {
-    high: 1,
-    normal: 2,
-    low: 3,
-  };
+  const priorityOrder = { high: 1, normal: 2, low: 3 };
 
   const filteredTasks = tasks
     .filter((task) => {
@@ -145,6 +161,7 @@ const TaskManApp = ({
         🎯 Score: {score} 🔥 Level: {level}
       </div>
 
+      {/* חשוב: TaskInput חייב לקרוא עם 6 פרמטרים (כבר אצלך כך). */}
       <TaskInput onAddTask={handleAddTask} />
       <DoneStatusTabs tab={tab} setTab={setTab} />
 
@@ -162,7 +179,7 @@ const TaskManApp = ({
           toggleTaskCompleted={handleToggleTaskCompleted}
           eatingTaskId={eatingTaskId}
           tab={tab}
-          onEditTask={handleEditTask} // ✅ הכי חשוב – זה מה שהיה חסר!
+          onEditTask={handleEditTask}
         />
       )}
 

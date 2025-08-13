@@ -11,35 +11,50 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
   const actualTasks = externalSetTasks ? tasks : internalTasks;
   const setTasks = externalSetTasks || internalSetTasks;
 
-  const addTask = (text, priority, date, category, deadline) => {
+  // ➜ הוספת לוגים + נרמול: תמיד נשמור users (מערך) ו-participants (מחרוזת)
+  const addTask = (text, priority, date, category, deadline, participants) => {
+    console.log("[TodoApp] addTask() received:", {
+      text, priority, date, category, deadline, participants
+    });
+
+    let usersArray = [];
+    let participantsString = "";
+
+    if (Array.isArray(participants)) {
+      usersArray = participants.filter(Boolean).map(s => String(s).trim()).filter(Boolean);
+      participantsString = usersArray.join(", ");
+    } else if (typeof participants === "string") {
+      const p = participants.trim();
+      usersArray = p ? p.split(",").map(s => s.trim()).filter(Boolean) : [];
+      participantsString = usersArray.join(", ");
+    }
+
     const newTask = {
       id: Date.now().toString(),
       text,
       priority,
       completed: false,
-      date,
-      deadline,
+      date,       // DD/MM/YYYY
+      deadline,   // DD/MM/YYYY
       category,
+      users: usersArray,                // עריכה
+      participants: participantsString, // תצוגה
     };
-    setTasks([newTask, ...actualTasks]);
+
+    console.log("[TodoApp] Task created:", newTask);
+    setTasks(prev => [newTask, ...prev]); // חשוב: פונקציונלי
   };
 
   const toggleTaskCompleted = (id) => {
-    const updatedTasks = actualTasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updatedTasks);
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
   };
 
   const removeTask = (id) => {
-    setTasks(actualTasks.filter((task) => task.id !== id));
+    setTasks(prev => prev.filter(t => t.id !== id));
   };
 
   const handleEditTask = (updatedTask) => {
-    const updatedTasks = actualTasks.map((task) =>
-      task.id === updatedTask.id ? { ...task, ...updatedTask } : task
-    );
-    setTasks(updatedTasks);
+    setTasks(prev => prev.map(t => t.id === updatedTask.id ? { ...t, ...updatedTask } : t));
   };
 
   return (
@@ -71,5 +86,3 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
-
-

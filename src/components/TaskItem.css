@@ -148,3 +148,11 @@
   white-space: normal;
   word-break: break-word;
 }
+.task-participants {
+  margin-inline-start: 8px;
+  white-space: nowrap;
+}
+.task-participants {
+  margin-inline-start: 8px;
+  white-space: nowrap;
+}
