@@ -18,35 +18,13 @@
   box-sizing: border-box;
   background-color: white;
   outline: none;
-  width: auto;
+  min-width: 120px; /* יותר צר */
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .input-task-container input[type="text"] {
-  width: 25ch;
-}
-
-.input-task-container input[type="date"],
-.input-task-container .deadline-date-input {
-  padding: 10px;
-  font-size: 14px;
-  width: 9ch !important;
-  min-width: unset !important;
-  max-width: unset !important;
-  border: 2px solid brown;
-  border-radius: 20px;
-  background-color: white;
-  outline: none;
-  cursor: pointer;
-  text-align: center;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.input-task-container input:focus,
-.input-task-container select:focus {
-  border-color: #a52a2a;
-  box-shadow: 0 0 4px rgba(165, 42, 42, 0.4);
+  width: 220px;
 }
 
 .input-task-container button {
@@ -66,23 +44,5 @@
 
 .input-task-container button:hover {
   background-color: #ffe0b3;
-  box-shadow: 0 6px 12px rgba(255, 200, 150, 0.3);
-  transform: scale(1.02);
-}
-
-/* 🌐 רספונסיביות למסכים קטנים */
-@media (max-width: 768px) {
-  .input-task-container {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  .input-task-container input,
-  .input-task-container select,
-  .input-task-container .deadline-date-input,
-  .input-task-container button {
-    flex: 1 1 100%;
-    max-width: 90%;
-  }
+  box-shadow: 0 4px 8px rgba(255, 200, 150, 0.2);
 }
