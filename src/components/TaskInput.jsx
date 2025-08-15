@@ -1,75 +1,45 @@
 import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import { format } from "date-fns";
-import "react-datepicker/dist/react-datepicker.css";
 import "./TaskInput.css";
 
 function TaskInput({ onAddTask }) {
   const [inputValue, setInputValue] = useState("");
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
-  const [deadline, setDeadline] = useState(new Date());
-  const [participants, setParticipants] = useState("");
+  const [deadline, setDeadline] = useState("");
 
   const handleAdd = () => {
     const trimmedValue = inputValue.trim();
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
+    if (trimmedValue && priority && category && deadline) {
+      const date = new Date();
+      const formattedDate = `${String(date.getDate()).padStart(2, "0")}/${String(
+        date.getMonth() + 1
+      ).padStart(2, "0")}/${date.getFullYear()}`;
 
-    if (!trimmedValue || !priority || !category || !deadline) {
+      onAddTask(trimmedValue, priority, formattedDate, category, deadline);
+      setInputValue("");
+      setPriority("");
+      setCategory("");
+      setDeadline("");
+    } else {
       alert("Please enter all fields: mission, priority, category, and deadline!");
-      return;
     }
-    if (Object.prototype.toString.call(deadline) !== "[object Date]" || isNaN(deadline)) {
-      alert("Invalid date format. Please enter a valid date.");
-      return;
-    }
-
-    const deadlineDate = new Date(deadline);
-    deadlineDate.setHours(0, 0, 0, 0);
-    if (deadlineDate < now) {
-      alert("Deadline must be today or a future date.");
-      return;
-    }
-
-    const creationDate = format(now, "dd/MM/yyyy");
-    const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
-
-    // נשלח כמערך (כמו שיש לך כיום)
-    const participantsArray = participants
-      .split(",")
-      .map((p) => p.trim())
-      .filter(Boolean);
-
-    console.log("[TaskInput] onAddTask payload:", {
-      text: trimmedValue,
-      priority,
-      category,
-      creationDate,
-      deadline: deadlineFormatted,
-      participants: participantsArray,
-    });
-
-    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted, participantsArray);
-
-    setInputValue("");
-    setPriority("");
-    setCategory("");
-    setDeadline(new Date());
-    setParticipants("");
   };
 
   return (
     <div className="input-task-container">
+      <label htmlFor="task-input" style={{ display: "none" }}>Task</label>
       <input
+        id="task-input"
         type="text"
-        placeholder="🎮 What's your next mission?"
+        placeholder="🎮 What’s your next mission?"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         aria-label="Task"
       />
 
+      <label htmlFor="priority-select" style={{ display: "none" }}>Priority</label>
       <select
+        id="priority-select"
         value={priority}
         onChange={(e) => setPriority(e.target.value)}
         className="priority-select"
@@ -81,7 +51,9 @@ function TaskInput({ onAddTask }) {
         <option value="low">🤢 Low</option>
       </select>
 
+      <label htmlFor="category-select" style={{ display: "none" }}>Category</label>
       <select
+        id="category-select"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
         className="category-select"
@@ -93,22 +65,14 @@ function TaskInput({ onAddTask }) {
         <option value="other">💡 Other</option>
       </select>
 
-      <DatePicker
-        selected={deadline}
-        onChange={(date) => setDeadline(date)}
-        dateFormat="dd/MM/yyyy"
-        placeholderText="📅 DD/MM/YYYY"
-        minDate={new Date()}
-        className="deadline-date-input"
-        aria-label="Deadline"
-      />
-
+      <label htmlFor="deadline-input" style={{ display: "none" }}>Deadline</label>
       <input
-        type="text"
-        placeholder="👥 Add participants (comma-separated)"
-        value={participants}
-        onChange={(e) => setParticipants(e.target.value)}
-        aria-label="Participants"
+        id="deadline-input"
+        type="date"
+        value={deadline}
+        onChange={(e) => setDeadline(e.target.value)}
+        className="deadline-input"
+        aria-label="Deadline"
       />
 
       <button onClick={handleAdd}>+ Add</button>
@@ -117,3 +81,7 @@ function TaskInput({ onAddTask }) {
 }
 
 export default TaskInput;
+
+
+
+
