@@ -1,33 +1,30 @@
-# Step 1: Build the React app
-FROM node:18-alpine AS builder
+# syntax=docker/dockerfile:1
 
-# Set working directory inside the container
+# ---- Build stage ----
+FROM node:18-alpine AS build
 WORKDIR /app
 
-# Copy package files and install dependencies
+# מתקין תלויות לפי ה-lock (מהיר ויציב ל-CI)
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the app's source code
+# מעתיק קוד ובונה
 COPY . .
-
-# Build the React app
+ENV CI=true
 RUN npm run build
 
-# Step 2: Serve the built app with Nginx
-FROM nginx:alpine
+# ---- Runtime stage (Nginx) ----
+FROM nginx:1.27-alpine
 
-# Remove default nginx static files
-RUN rm -rf /usr/share/nginx/html/*
+# קונפיג' SPA כדי ש-refresh בנתיבים יעבוד
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy build output from previous stage
-COPY --from=builder /app/build /usr/share/nginx/html
+# קבצי ה-build מהשלב הקודם
+COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy custom nginx config if needed (optional)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# (רשות) בריאות בסיסית
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget -qO- http://localhost/ || exit 1
 
-# Expose port 80
 EXPOSE 80
-
-# Start nginx when the container starts
 CMD ["nginx", "-g", "daemon off;"]
