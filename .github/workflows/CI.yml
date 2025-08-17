@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main", "feature-*", "fix/*"]
+  pull_request:
+    branches: ["main"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🟢 Node 18 + cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: 📦 Install (locked)
+        run: npm ci
+
+      - name: 🔍 Lint
+        run: npm run lint
+
+      - name: 🧹 Format check
+        run: npm run format
+
+      - name: 🛡️ Security audit (prod deps)
+        run: npm run audit
+        continue-on-error: true   # לא להפיל ריצה בהגשה; אפשר להסיר אח"כ
+
+      - name: 🛠️ Build (CRA)
+        env:
+          CI: true
+        run: npm run build
+
+      - name: ⬆️ Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: taskman-build
+          path: build
+
+  codeql:
+    runs-on: ubuntu-latest
+    needs: build-and-check
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      - name: 🧬 Init CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+      - name: 🔎 Analyze
+        uses: github/codeql-action/analyze@v3
+
