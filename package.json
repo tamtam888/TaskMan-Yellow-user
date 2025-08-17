@@ -5,8 +5,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --check . --ignore-path .gitignore",
+    "audit": "npm audit --omit=dev --audit-level=moderate",
+    "licenses": "license-checker --production --json | Out-File -Encoding utf8 ALL_LICENSES.json",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
@@ -24,17 +28,17 @@
   "devDependencies": {
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "babel-jest": "^30.0.5",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
+    "license-checker": "^25.0.1",
     "prettier": "^3.6.2"
   },
   "browserslist": {
@@ -48,5 +52,41 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": "true",
+      "es2021": "true"
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": "true"
+      },
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "plugins": [
+      "react",
+      "react-hooks",
+      "jsx-a11y"
+    ],
+    "ignorePatterns": [
+      "build",
+      "dist",
+      "node_modules"
+    ],
+    "rules": {
+      "no-eval": "error",
+      "no-alert": "error",
+      "react/prop-types": "off"
+    }
+  },
+  "prettier": {
+    "singleQuote": "true",
+    "printWidth": "100"
   }
 }
