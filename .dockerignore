@@ -1,9 +1,9 @@
-node_modules
-build
 .git
 .github
-.gitignore
-npm-debug.log*
-yarn-error.log*
-coverage
+node_modules
+build
+dist
 *.log
+Dockerfile*
+README*.md
+
