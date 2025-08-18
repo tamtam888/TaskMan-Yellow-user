@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import "./TaskItem.css";
 
-/* סניטציה */
-import { sanitizeText, auditSanitize } from "../security/sanitize";
-
 function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return "";
     if (dateString.includes("/")) return dateString;
-    const [year, month, day] = dateString.split("-");
+    const [year, month, day] = (dateString || "").split("-");
     return `${day}/${month}/${year}`;
   };
 
@@ -19,7 +16,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
 
-  // תמיכה בשני שמות שדות: users (array/string) ו-participants (string/array)
+  // כמו בגרסה שעבדה: תמיכה גם במערך וגם במחרוזת
   const usersToString = (users, participants) => {
     if (Array.isArray(users)) return users.join(", ");
     if (typeof users === "string") return users;
@@ -27,12 +24,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     if (typeof participants === "string") return participants;
     return "";
   };
-  // fallback גם לשדה ישן participantsArray אם קיים איפשהו
-  const fallbackFromArray =
-    Array.isArray(task.participantsArray) ? task.participantsArray.join(", ") : "";
-
-  const usersDisplay =
-    usersToString(task.users, task.participants) || fallbackFromArray;
+  const usersDisplay = usersToString(task.users, task.participants);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(task.text);
@@ -41,13 +33,6 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
   );
   const [editedPriority, setEditedPriority] = useState(task.priority);
   const [editedUsers, setEditedUsers] = useState(usersDisplay);
-
-  const getCategoryIcon = (category) => {
-    if (category === "Shopping") return "🛒";
-    if (category === "mission") return "📋";
-    if (category === "other") return "💡";
-    return "";
-  };
 
   const isValidDate = (dateString) => {
     const regex = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -66,38 +51,27 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
   };
 
   const handleSave = () => {
-    // סניטציה של שדות העריכה
-    const cleanText = sanitizeText(editedText);
-    auditSanitize("editText", editedText, cleanText);
-
-    const cleanUsersStr = sanitizeText(editedUsers || "");
-    auditSanitize("editUsers", editedUsers, cleanUsersStr);
-
-    const cleanDeadline = sanitizeText(editedDeadline || "");
-    auditSanitize("editDeadline", editedDeadline, cleanDeadline);
-
-    if (!isValidDate(cleanDeadline)) {
+    if (!isValidDate(editedDeadline)) {
       alert("Please enter a valid date in the format DD/MM/YYYY.");
       return;
     }
-    if (!isFutureOrToday(cleanDeadline)) {
+    if (!isFutureOrToday(editedDeadline)) {
       alert("Deadline must be today or a future date.");
       return;
     }
 
-    // נאמן להצגה: נשמור גם כ-array (users) וגם כמחרוזת (participants)
     const usersArray =
-      cleanUsersStr.trim() === ""
+      editedUsers.trim() === ""
         ? []
-        : cleanUsersStr.split(",").map((u) => u.trim()).filter(Boolean);
+        : editedUsers.split(",").map((u) => u.trim()).filter(Boolean);
 
     const updatedTask = {
       ...task,
-      text: cleanText,
-      deadline: formatDateForStorage(cleanDeadline),
+      text: editedText,
+      deadline: formatDateForStorage(editedDeadline),
       priority: editedPriority,
-      users: usersArray,                 // לעריכה/לוגיקה
-      participants: cleanUsersStr.trim() // להצגה
+      users: usersArray,               // לעריכה
+      participants: editedUsers.trim() // לתצוגה
     };
 
     onEdit(updatedTask);
@@ -128,7 +102,6 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
             onChange={(e) => setEditedText(e.target.value)}
             placeholder="Task text"
             aria-label="Edit task"
-            dir="rtl"
           />
           <input
             type="text"
@@ -172,9 +145,9 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
           </span>
           <span className="task-text">{task.text}</span>
 
-          {/* הצגת משתתפים בבירור */}
+          {/* 👥 תצוגת משתתפים */}
           {usersDisplay && (
-            <span className="task-users"><strong>Participants:</strong> {usersDisplay}</span>
+            <span className="task-users">🧑‍🤝‍🧑 {usersDisplay}</span>
           )}
 
           {task.deadline && (
@@ -183,9 +156,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
             </span>
           )}
 
-          <span className="task-category">
-            {getCategoryIcon(task.category)} {task.category}
-          </span>
+          <span className="task-category">{task.category}</span>
 
           {task.date && <span className="task-date">{task.date}</span>}
 
@@ -201,4 +172,3 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
 }
 
 export default TaskItem;
-

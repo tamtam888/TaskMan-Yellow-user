@@ -4,15 +4,12 @@ import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import "./TaskInput.css";
 
-/* סניטציה */
-import { sanitizeText, auditSanitize } from "../security/sanitize";
-
 function TaskInput({ onAddTask }) {
   const [inputValue, setInputValue] = useState("");
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
   const [deadline, setDeadline] = useState(new Date());
-  const [participants, setParticipants] = useState(""); // מחרוזת עם פסיקים
+  const [participants, setParticipants] = useState("");
 
   const handleAdd = () => {
     const trimmedValue = inputValue.trim();
@@ -38,24 +35,20 @@ function TaskInput({ onAddTask }) {
     const creationDate = format(now, "dd/MM/yyyy");
     const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
 
-    // ✱ סניטציה של הטקסט ושל מחרוזת המשתתפים (נשארת כמחרוזת!)
-    const cleanText = sanitizeText(trimmedValue);
-    auditSanitize("text", trimmedValue, cleanText);
+    // כמו בגרסה שעבדה: מפצלים בפסיקים ושולחים כ-array
+    const participantsArray = (participants || "")
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
 
-    const cleanParticipantsStr = sanitizeText(participants || "");
-    auditSanitize("participants", participants, cleanParticipantsStr);
-
-    console.log("[TaskInput] onAddTask payload:", {
-      text: cleanText,
+    onAddTask(
+      trimmedValue,
       priority,
-      category,
       creationDate,
-      deadline: deadlineFormatted,
-      participants: cleanParticipantsStr, // ← מחרוזת, כדי ש-TaskManApp ישמור task.participants
-    });
-
-    // ↩ כמו שהיה אצלך במקור: הפרמטר האחרון הוא מחרוזת participants
-    onAddTask(cleanText, priority, creationDate, category, deadlineFormatted, cleanParticipantsStr);
+      category,
+      deadlineFormatted,
+      participantsArray
+    );
 
     setInputValue("");
     setPriority("");

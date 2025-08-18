@@ -31,11 +31,10 @@ const TaskManApp = ({
     audio.play();
   };
 
-  // ⬇️⬇️⬇️ שינוי קריטי: מוסיפים participants לפרמטרים + שומרים users/participants ⬇️⬇️⬇️
+  // מקבל participants כמערך/מחרוזת ושומר גם users וגם participants
   const handleAddTask = (text, priority, date, category, deadline, participants) => {
     console.log("[TaskManApp] handleAddTask received participants:", participants);
 
-    // נרמול: יכול להגיע כמערך/מחרוזת
     let usersArray = [];
     let participantsString = "";
 
@@ -60,11 +59,10 @@ const TaskManApp = ({
       participants: participantsString, // 👥 לתצוגה
     };
 
-    setTasks((prev) => [...prev, newTask]); // שמירה בטוחה
+    setTasks((prev) => [...prev, newTask]);
     playSound(addSound);
     setGameOver(false);
   };
-  // ⬆️⬆️⬆️ סוף השינוי הקריטי ⬆️⬆️⬆️
 
   const handleRemoveTask = (id) => {
     setTimeout(() => {
@@ -161,7 +159,6 @@ const TaskManApp = ({
         🎯 Score: {score} 🔥 Level: {level}
       </div>
 
-      {/* חשוב: TaskInput חייב לקרוא עם 6 פרמטרים (כבר אצלך כך). */}
       <TaskInput onAddTask={handleAddTask} />
       <DoneStatusTabs tab={tab} setTab={setTab} />
 
