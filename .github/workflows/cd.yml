@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: CD - Docker Build
 
 on:
@@ -9,7 +10,6 @@ permissions:
 
 jobs:
   docker-build:
-    if: ${{ hashFiles('Dockerfile') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -17,16 +17,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # בדיקה אם יש Dockerfile (קובעת משתנה פלט)
+      - name: Check for Dockerfile
+        id: check
+        run: |
+          if [ -f Dockerfile ]; then
+            echo "has_df=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_df=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Show workspace (debug)
         run: |
           pwd
           ls -la
-          echo "Dockerfile exists?"; test -f Dockerfile && echo yes || (echo no && exit 1)
+          echo "Dockerfile exists? ${{ steps.check.outputs.has_df }}"
 
       - name: Setup Docker Buildx
+        if: ${{ steps.check.outputs.has_df == 'true' }}
         uses: docker/setup-buildx-action@v3
 
       - name: Build image (no push)
+        if: ${{ steps.check.outputs.has_df == 'true' }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -34,3 +46,7 @@ jobs:
           platforms: linux/amd64
           push: false
           tags: taskman:ci
+
+      - name: Skip (no Dockerfile)
+        if: ${{ steps.check.outputs.has_df != 'true' }}
+        run: echo "No Dockerfile found. Skipping Docker build."
