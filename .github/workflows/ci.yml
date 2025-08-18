@@ -13,9 +13,10 @@ concurrency:
 permissions:
   contents: read
 
+# <<< שימי לב לשינוי כאן
 defaults:
   run:
-    shell: pwsh
+    shell: powershell
 
 jobs:
   build-and-test:
@@ -52,3 +53,4 @@ jobs:
         with:
           name: taskman-build
           path: build
+
