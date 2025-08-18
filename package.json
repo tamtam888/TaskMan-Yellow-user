@@ -2,81 +2,40 @@
   "name": "taskman-app",
   "version": "1.0.0",
   "private": true,
-  "engines": {
-    "node": ">=18"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "lint": "eslint src --ext .js,.jsx",
-    "lint:fix": "eslint src --ext .js,.jsx --fix",
-    "format": "prettier --check . --ignore-path .gitignore",
-    "audit": "npm audit --omit=dev --audit-level=moderate",
-    "licenses": "license-checker --production --json > ALL_LICENSES.json"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "dependencies": {
     "@react-oauth/google": "^0.12.2",
     "big-integer": "^1.6.52",
     "date-fns": "^4.1.0",
+    "nmp": "^1.0.3",
     "react": "^18.2.0",
     "react-datepicker": "^8.4.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
+    "start": "^5.1.0",
     "styled-components": "^5.3.10",
     "web-vitals": "^5.0.1"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "babel-jest": "^30.0.5",
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "license-checker": "^25.0.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
     "prettier": "^3.6.2"
-  },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es2021": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:jsx-a11y/recommended",
-      "prettier"
-    ],
-    "parserOptions": {
-      "ecmaFeatures": {
-        "jsx": true
-      },
-      "ecmaVersion": "latest",
-      "sourceType": "module"
-    },
-    "plugins": [
-      "react",
-      "react-hooks",
-      "jsx-a11y"
-    ],
-    "ignorePatterns": [
-      "build",
-      "dist",
-      "node_modules"
-    ],
-    "settings": {
-      "react": {
-        "version": "detect"
-      }
-    },
-    "rules": {
-      "no-eval": "error",
-      "no-alert": "warn",
-      "react/prop-types": "off"
-    }
-  },
-  "prettier": {
-    "singleQuote": true,
-    "printWidth": 100
   },
   "browserslist": {
     "production": [

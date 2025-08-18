@@ -18,13 +18,24 @@
   box-sizing: border-box;
   background-color: white;
   outline: none;
-  min-width: 120px; /* יותר צר */
+  min-width: 100px; /* יותר צר */
   cursor: pointer;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-task-container input[type="text"] {
-  width: 220px;
+/* שדה תאריך צר */
+.deadline-date-input {
+  width: 100px !important;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 20px;
+  border: 2px solid brown;
+}
+
+/* שדה משתתפים רחב יותר */
+.input-task-container input[aria-label="Participants"] {
+  min-width: 220px;
+  width: 280px;
 }
 
 .input-task-container button {
