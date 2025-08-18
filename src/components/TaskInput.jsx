@@ -4,6 +4,9 @@ import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import "./TaskInput.css";
 
+/* ✚ ADDED: sanitize helpers */
+import { sanitizeText, auditSanitize } from "../security/sanitize";
+
 function TaskInput({ onAddTask }) {
   const [inputValue, setInputValue] = useState("");
   const [priority, setPriority] = useState("");
@@ -35,14 +38,21 @@ function TaskInput({ onAddTask }) {
     const creationDate = format(now, "dd/MM/yyyy");
     const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
 
-    // נשלח כמערך (כמו שיש לך כיום)
-    const participantsArray = participants
+    /* ✚ ADDED: sanitize inputs before using them */
+    const cleanText = sanitizeText(trimmedValue);
+    auditSanitize("text", trimmedValue, cleanText);
+
+    const cleanParticipantsStr = sanitizeText(participants || "");
+    auditSanitize("participants", participants, cleanParticipantsStr);
+
+    // keep your array behavior as-is, now based on the cleaned string
+    const participantsArray = cleanParticipantsStr
       .split(",")
       .map((p) => p.trim())
       .filter(Boolean);
 
     console.log("[TaskInput] onAddTask payload:", {
-      text: trimmedValue,
+      text: cleanText,
       priority,
       category,
       creationDate,
@@ -50,7 +60,7 @@ function TaskInput({ onAddTask }) {
       participants: participantsArray,
     });
 
-    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted, participantsArray);
+    onAddTask(cleanText, priority, creationDate, category, deadlineFormatted, participantsArray);
 
     setInputValue("");
     setPriority("");

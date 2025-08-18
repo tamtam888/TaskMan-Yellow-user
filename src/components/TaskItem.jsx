@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "./TaskItem.css";
 
+/* ✚ ADDED: sanitize helpers */
+import { sanitizeText, auditSanitize } from "../security/sanitize";
+
 function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return "";
@@ -58,27 +61,37 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
   };
 
   const handleSave = () => {
-    if (!isValidDate(editedDeadline)) {
+    /* ✚ ADDED: sanitize edited fields first */
+    const cleanText = sanitizeText(editedText);
+    auditSanitize("editText", editedText, cleanText);
+
+    const cleanUsersStr = sanitizeText(editedUsers || "");
+    auditSanitize("editUsers", editedUsers, cleanUsersStr);
+
+    const cleanDeadline = sanitizeText(editedDeadline || "");
+    auditSanitize("editDeadline", editedDeadline, cleanDeadline);
+
+    if (!isValidDate(cleanDeadline)) {
       alert("Please enter a valid date in the format DD/MM/YYYY.");
       return;
     }
-    if (!isFutureOrToday(editedDeadline)) {
+    if (!isFutureOrToday(cleanDeadline)) {
       alert("Deadline must be today or a future date.");
       return;
     }
 
     const usersArray =
-      editedUsers.trim() === ""
+      cleanUsersStr.trim() === ""
         ? []
-        : editedUsers.split(",").map((u) => u.trim()).filter(Boolean);
+        : cleanUsersStr.split(",").map((u) => u.trim()).filter(Boolean);
 
     const updatedTask = {
       ...task,
-      text: editedText,
-      deadline: formatDateForStorage(editedDeadline),
+      text: cleanText,
+      deadline: formatDateForStorage(cleanDeadline),
       priority: editedPriority,
       users: usersArray,               // נשמר כ-array
-      participants: editedUsers.trim() // ונוסף גם כטקסט
+      participants: cleanUsersStr.trim() // ונוסף גם כטקסט
     };
 
     onEdit(updatedTask);
@@ -183,3 +196,4 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
 }
 
 export default TaskItem;
+
