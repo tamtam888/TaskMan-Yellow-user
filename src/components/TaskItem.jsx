@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./TaskItem.css";
 
-/* ✚ ADDED: sanitize helpers */
+/* סניטציה */
 import { sanitizeText, auditSanitize } from "../security/sanitize";
 
 function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
@@ -19,7 +19,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
 
-  // תומך בכל הצורות: users/participants כמערך או כמחרוזת
+  // תמיכה בשני שמות שדות: users (array/string) ו-participants (string/array)
   const usersToString = (users, participants) => {
     if (Array.isArray(users)) return users.join(", ");
     if (typeof users === "string") return users;
@@ -27,7 +27,12 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     if (typeof participants === "string") return participants;
     return "";
   };
-  const usersDisplay = usersToString(task.users, task.participants);
+  // fallback גם לשדה ישן participantsArray אם קיים איפשהו
+  const fallbackFromArray =
+    Array.isArray(task.participantsArray) ? task.participantsArray.join(", ") : "";
+
+  const usersDisplay =
+    usersToString(task.users, task.participants) || fallbackFromArray;
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedText, setEditedText] = useState(task.text);
@@ -61,7 +66,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
   };
 
   const handleSave = () => {
-    /* ✚ ADDED: sanitize edited fields first */
+    // סניטציה של שדות העריכה
     const cleanText = sanitizeText(editedText);
     auditSanitize("editText", editedText, cleanText);
 
@@ -80,6 +85,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
       return;
     }
 
+    // נאמן להצגה: נשמור גם כ-array (users) וגם כמחרוזת (participants)
     const usersArray =
       cleanUsersStr.trim() === ""
         ? []
@@ -90,8 +96,8 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
       text: cleanText,
       deadline: formatDateForStorage(cleanDeadline),
       priority: editedPriority,
-      users: usersArray,               // נשמר כ-array
-      participants: cleanUsersStr.trim() // ונוסף גם כטקסט
+      users: usersArray,                 // לעריכה/לוגיקה
+      participants: cleanUsersStr.trim() // להצגה
     };
 
     onEdit(updatedTask);
@@ -107,7 +113,6 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
   };
 
   return (
-    // שמרתי className "task-list-item" כאן (אם היה לך CSS עליו קודם)
     <li className={`task-list-item task-item ${task.priority} ${task.completed ? "completed" : ""}`}>
       {!isEditing && (
         <button className="edit-btn" title="Edit task" onClick={() => setIsEditing(true)}>
@@ -167,9 +172,9 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
           </span>
           <span className="task-text">{task.text}</span>
 
-          {/* תצוגת משתתפים בכל צורה */}
+          {/* הצגת משתתפים בבירור */}
           {usersDisplay && (
-            <span className="task-users">🧑‍🤝‍🧑 {usersDisplay}</span>
+            <span className="task-users"><strong>Participants:</strong> {usersDisplay}</span>
           )}
 
           {task.deadline && (
