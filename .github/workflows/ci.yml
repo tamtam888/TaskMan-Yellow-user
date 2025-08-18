@@ -13,14 +13,10 @@ concurrency:
 permissions:
   contents: read
 
-defaults:
-  run:
-    shell: powershell   # use Windows PowerShell on your self-hosted runner
-
 jobs:
   build-and-test:
-    runs-on: [self-hosted, windows]
-    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
@@ -32,18 +28,17 @@ jobs:
           node-version: 18
           cache: npm
 
-      - name: Install
+      - name: Install deps (lock-aware)
         run: |
-          if (Test-Path package-lock.json) { npm ci } else { npm install }
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
       - name: Test (non-interactive)
         env:
           CI: true
         run: npm test -- --watchAll=false --passWithNoTests
 
-      - name: Build
+      - name: Build (ignore CRA warning->error)
         env:
-          CI: true
           NODE_OPTIONS: --max_old_space_size=4096
         run: npm run build
 

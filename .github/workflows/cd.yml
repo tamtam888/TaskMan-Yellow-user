@@ -1,4 +1,4 @@
-name: CD - Docker Build (optional)
+name: CD - Docker Build
 
 on:
   push:
@@ -9,7 +9,6 @@ permissions:
 
 jobs:
   docker-build:
-    # נריץ רק אם יש Dockerfile בשורש. אם שמרת אותו בתיקיה אחרת – עדכני את הנתיב.
     if: ${{ hashFiles('Dockerfile') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
