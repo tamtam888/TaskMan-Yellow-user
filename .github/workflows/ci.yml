@@ -1,48 +1,39 @@
-name: CI - Build & Test TaskMan
+name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "feature-*" ]
   pull_request:
     branches: [ "main" ]
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-permissions:
-  contents: read
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node 18 (with npm cache)
+      - name: 🟢 Node 18 + cache
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
+          cache: "npm"
 
-      - name: Install deps (lock-aware)
-        run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+      - name: 📦 Install (locked)
+        run: npm ci
 
-      - name: Test (non-interactive)
+      - name: 🧪 Run tests
         env:
           CI: true
-        run: npm test -- --watchAll=false --passWithNoTests
+        run: npm test -- --watchAll=false
 
-      - name: Build (ignore CRA warning->error)
+      - name: 🛠️ Build
         env:
-          NODE_OPTIONS: --max_old_space_size=4096
+          CI: true
         run: npm run build
 
-      - name: Upload build artifact
+      - name: ⬆️ Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: taskman-build
