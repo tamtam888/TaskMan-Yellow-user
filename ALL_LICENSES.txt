@@ -1,19 +1,31 @@
-MIT: 1134 packages
-ISC: 67 packages
-CC0-1.0: 42 packages
-BSD-2-Clause: 39 packages
-Apache-2.0: 32 packages
-BSD-3-Clause: 31 packages
-Unlicense: 3 packages
-BlueOak-1.0.0: 3 packages
-(MIT OR CC0-1.0): 3 packages
-0BSD: 2 packages
-MIT-0: 1 package
-Python-2.0: 1 package
-MPL-2.0: 1 package
-CC-BY-4.0: 1 package
-BSD: 1 package
-(Apache-2.0 OR MPL-1.1): 1 package
-(AFL-2.1 OR BSD-3-Clause): 1 package
-(BSD-3-Clause OR GPL-2.0): 1 package
-UNLICENSED: 1 package
+# ======================
+#  TaskMan Project Licenses
+# ======================
+
+# --- Runtime Dependencies ---
+react - MIT License
+react-dom - MIT License
+react-scripts - MIT License
+styled-components - MIT License
+date-fns - MIT License
+dompurify - Apache-2.0 License
+react-datepicker - MIT License
+@react-oauth/google - MIT License
+big-integer - MIT License
+web-vitals - Apache-2.0 License
+
+# --- Development Dependencies ---
+@babel/preset-env - MIT License
+@babel/preset-react - MIT License
+babel-jest - MIT License
+jest - MIT License
+jest-environment-jsdom - MIT License
+@testing-library/react - MIT License
+@testing-library/jest-dom - MIT License
+@testing-library/user-event - MIT License
+eslint - MIT License
+eslint-config-prettier - MIT License
+eslint-plugin-prettier - MIT License
+eslint-plugin-react - MIT License
+prettier - MIT License
+identity-obj-proxy - MIT License
