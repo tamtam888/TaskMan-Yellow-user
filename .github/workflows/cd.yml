@@ -2,16 +2,22 @@ name: CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
+    permissions:
+      contents: write   # כדי לאפשר push ל־gh-pages
 
-      - name: 🟢 Setup Node
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
@@ -19,12 +25,18 @@ jobs:
       - name: 📦 Install dependencies
         run: npm ci
 
-      - name: 🛠️ Build project
+      - name: 🛠️ Build React app
         run: npm run build
 
+      # יצירת Docker image (רק אם תרצי לשמור אותו ב־DockerHub)
+      - name: 🐳 Build Docker image
+        run: docker build -t taskman-app .
+
+      # שלב פריסה ל־GitHub Pages
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+          publish_branch: gh-pages
 
