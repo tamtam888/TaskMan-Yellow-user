@@ -57,5 +57,115 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
       return;
     }
     if (!isFutureOrToday(editedDeadline)) {
-      alert("Deadline must be today o
+      alert("Deadline must be today or a future date.");
+      return;
+    }
 
+    const usersArray =
+      editedUsers.trim() === ""
+        ? []
+        : editedUsers.split(",").map((u) => u.trim()).filter(Boolean);
+
+    const updatedTask = {
+      ...task,
+      text: editedText,
+      deadline: formatDateForStorage(editedDeadline),
+      priority: editedPriority,
+      users: usersArray,
+      participants: editedUsers.trim(),
+    };
+
+    onEdit(updatedTask);
+    setIsEditing(false);
+  };
+
+  const handleDeadlineChange = (e) => {
+    let v = e.target.value.replace(/[^\d/]/g, "");
+    if (v.length >= 2 && v.charAt(2) !== "/") v = v.slice(0, 2) + "/" + v.slice(2);
+    if (v.length >= 5 && v.charAt(5) !== "/") v = v.slice(0, 5) + "/" + v.slice(5);
+    if (v.length > 10) v = v.slice(0, 10);
+    setEditedDeadline(v);
+  };
+
+  return (
+    <li className={`task-list-item task-item ${task.priority} ${task.completed ? "completed" : ""}`}>
+      {!isEditing && (
+        <button className="edit-btn" title="Edit task" onClick={() => setIsEditing(true)}>
+          🖉
+        </button>
+      )}
+
+      {isEditing ? (
+        <div className="edit-form">
+          <input
+            type="text"
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
+            placeholder="Task text"
+            aria-label="Edit task"
+          />
+          <input
+            type="text"
+            value={editedDeadline}
+            onChange={handleDeadlineChange}
+            placeholder="DD/MM/YYYY"
+            aria-label="Edit deadline"
+            maxLength="10"
+          />
+          <select
+            value={editedPriority}
+            onChange={(e) => setEditedPriority(e.target.value)}
+            aria-label="Edit priority"
+          >
+            <option value="high">High</option>
+            <option value="normal">Normal</option>
+            <option value="low">Low</option>
+          </select>
+          <input
+            type="text"
+            value={editedUsers}
+            onChange={(e) => setEditedUsers(e.target.value)}
+            placeholder="Add participants"
+            aria-label="Edit users"
+          />
+          <div className="edit-buttons">
+            <button onClick={handleSave}>✅</button>
+            <button onClick={() => setIsEditing(false)}>❌</button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <input type="checkbox" checked={task.completed} onChange={() => onToggle(task.id)} />
+
+          <span className="emoji-left">
+            {task.priority === "high" ? "😡" : task.priority === "normal" ? "🤔" : "🤢"}
+          </span>
+
+          <span className="task-text">{task.text}</span>
+
+          {usersDisplay && (
+            <span className="task-users">🧑‍🤝‍🧑 {usersDisplay}</span>
+          )}
+
+          {task.deadline && (
+            <span className="task-deadline">
+              <strong>Deadline:</strong> {formatDateForDisplay(task.deadline)}
+            </span>
+          )}
+
+          <span className="task-category">{task.category}</span>
+
+          {task.date && <span className="task-date">{task.date}</span>}
+
+          <button onClick={() => onDelete(task.id)} title="Remove">🗑️</button>
+
+          {eatingTaskId === task.id && (
+            <img src="/taskman-transparent.png" alt="Eating" className="dane-eat" />
+          )}
+        </>
+      )}
+    </li>
+  );
+}
+
+export default TaskItem;
