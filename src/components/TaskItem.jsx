@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "./TaskItem.css";
 
 function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
+  console.log("🔍 TaskItem קיבל משימה:", task); // ✅ כאן מותר להשתמש ב-task
+
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return "";
     if (dateString.includes("/")) return dateString;
@@ -32,6 +34,11 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     task.deadline ? formatDateForDisplay(task.deadline) : ""
   );
   const [editedPriority, setEditedPriority] = useState(task.priority);
+
+  const [editedParticipants, setEditedParticipants] = useState(task.participants || "");
+
+  const handleSave = () => {
+
   const [editedUsers, setEditedUsers] = useState(usersDisplay);
 
   const isValidDate = (dateString) => {
@@ -70,13 +77,18 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
       text: editedText,
       deadline: formatDateForStorage(editedDeadline),
       priority: editedPriority,
+
+      participants: editedParticipants, // ⬅ ללא split
+
       users: usersArray,               // לעריכה
       participants: editedUsers.trim() // לתצוגה
+
     };
 
     onEdit(updatedTask);
     setIsEditing(false);
   };
+
 
   const handleDeadlineChange = (e) => {
     let v = e.target.value.replace(/[^\d/]/g, "");
@@ -85,6 +97,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     if (v.length > 10) v = v.slice(0, 10);
     setEditedDeadline(v);
   };
+
 
   return (
     <li className={`task-list-item task-item ${task.priority} ${task.completed ? "completed" : ""}`}>
@@ -106,11 +119,10 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
           <input
             type="text"
             value={editedDeadline}
-            onChange={handleDeadlineChange}
+            onChange={(e) => setEditedDeadline(e.target.value)}
             placeholder="DD/MM/YYYY"
             aria-label="Edit deadline"
             maxLength="10"
-            className="deadline-input"
           />
           <select
             value={editedPriority}
@@ -123,31 +135,40 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
           </select>
           <input
             type="text"
+
+            value={editedParticipants}
+            onChange={(e) => setEditedParticipants(e.target.value)}
+            placeholder="Add participants"
+            aria-label="Edit participants"
+
             value={editedUsers}
             onChange={(e) => setEditedUsers(e.target.value)}
             placeholder="Add participants"
             aria-label="Edit users"
+
           />
           <div className="edit-buttons">
-            <button onClick={handleSave} title="Save changes">✅</button>
-            <button onClick={() => setIsEditing(false)} title="Cancel">❌</button>
+            <button onClick={handleSave}>✅</button>
+            <button onClick={() => setIsEditing(false)}>❌</button>
           </div>
         </div>
       ) : (
         <>
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={() => onToggle(task.id)}
-          />
+          <input type="checkbox" checked={task.completed} onChange={() => onToggle(task.id)} />
+
           <span className="emoji-left">
             {task.priority === "high" ? "😡" : task.priority === "normal" ? "🤔" : "🤢"}
           </span>
+
           <span className="task-text">{task.text}</span>
+
+          {task.participants && task.participants.trim() !== "" && (
+            <div className="task-users">🧑‍🤝‍🧑 {task.participants}</div>
 
           {/* 👥 תצוגת משתתפים */}
           {usersDisplay && (
             <span className="task-users">🧑‍🤝‍🧑 {usersDisplay}</span>
+
           )}
 
           {task.deadline && (
@@ -157,6 +178,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
           )}
 
           <span className="task-category">{task.category}</span>
+
 
           {task.date && <span className="task-date">{task.date}</span>}
 

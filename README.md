@@ -37,6 +37,14 @@ Created as part of a full-stack software engineering program using CI/CD, Docker
 
 ## ️🛠 Tech Stack
 
+- **Frontend**: React (Functional Components + Hooks)  
+- **Auth**: Google OAuth2 (via `@react-oauth/google`)  
+- **Styling**: Custom CSS (Retro-inspired + Responsive)  
+- **Testing**: React Testing Library  
+- **CI/CD**: GitHub Actions  
+- **Containerization**: Docker & DockerHub  
+- **Dev Tools**: ESLint, Prettier, Husky, Lightning  
+
 - **Frontend**: React (Functional Components + Hooks)
 - **Auth**: Google OAuth2 (`@react-oauth/google`)
 - **Styling**: Custom CSS (retro-inspired, responsive)
@@ -44,6 +52,7 @@ Created as part of a full-stack software engineering program using CI/CD, Docker
 - **CI/CD**: GitHub Actions (CI & CD)
 - **Containerization**: Docker & DockerHub
 - **Dev Tools**: ESLint, Prettier
+
 
 ---
 
