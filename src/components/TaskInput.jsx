@@ -35,18 +35,13 @@ function TaskInput({ onAddTask }) {
     const creationDate = format(now, "dd/MM/yyyy");
     const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
 
-    // שולחת את המשתתפים כטקסט
-    console.log("🧪 Creating task with participants:", participants);
-    onAddTask(trimmedValue, priority, creationDate, category, deadlineFormatted, participants);
-    
-
-    // איפוס השדות
-
-    // כמו בגרסה שעבדה: מפצלים בפסיקים ושולחים כ-array
+    // מפצלים את המשתתפים לפסיקים ושומרים כ-array
     const participantsArray = (participants || "")
       .split(",")
       .map((p) => p.trim())
       .filter(Boolean);
+
+    console.log("🧪 Creating task with participants:", participantsArray);
 
     onAddTask(
       trimmedValue,
@@ -57,6 +52,7 @@ function TaskInput({ onAddTask }) {
       participantsArray
     );
 
+    // איפוס השדות
     setInputValue("");
     setPriority("");
     setCategory("");
@@ -83,7 +79,7 @@ function TaskInput({ onAddTask }) {
         <option value="" disabled hidden>- Priority mission -</option>
         <option value="high">😡 High</option>
         <option value="normal">🤔 Normal</option>
-        <option value="low">🤢 Low</option>
+        <option value="low">🟢 Low</option>
       </select>
 
       <select
@@ -122,3 +118,4 @@ function TaskInput({ onAddTask }) {
 }
 
 export default TaskInput;
+
