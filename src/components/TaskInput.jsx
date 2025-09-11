@@ -79,7 +79,7 @@ function TaskInput({ onAddTask }) {
         <option value="" disabled hidden>- Priority mission -</option>
         <option value="high">😡 High</option>
         <option value="normal">🤔 Normal</option>
-        <option value="low">🟢 Low</option>
+        <option value="low">🤢 Low</option>
       </select>
 
       <select
