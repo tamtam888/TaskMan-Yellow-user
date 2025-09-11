@@ -1,10 +1,19 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import TodoApp from "./TodoApp";
-import '@testing-library/jest-dom';
 
-test("adds and displays a new task", () => {
+// עוזר לפורמט DD/MM/YYYY
+function formatDDMMYYYY(d) {
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+}
+
+test("adds and displays a new task", async () => {
   render(<TodoApp />);
 
+  // קלטים לפי aria-labels כפי שהגדרת בקומפוננטה
   fireEvent.change(screen.getByLabelText("Task"), {
     target: { value: "Buy cheese" },
   });
@@ -17,13 +26,21 @@ test("adds and displays a new task", () => {
     target: { value: "Shopping" },
   });
 
-  // 🟢 פתרון עובד לשדה תאריך:
+  // תאריך עתידי (מחר) בפורמט DD/MM/YYYY
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
   fireEvent.change(screen.getByPlaceholderText("📅 DD/MM/YYYY"), {
-    target: { value: "01/08/2025" },
+    target: { value: formatDDMMYYYY(tomorrow) },
   });
 
-  fireEvent.click(screen.getByText("+ Add"));
+  // הוספה
+  fireEvent.click(screen.getByRole("button", { name: /\+\s*add/i }));
 
-  expect(screen.getByText("Buy cheese")).toBeInTheDocument();
-  expect(screen.getAllByText(/🛒 Shopping/).length).toBeGreaterThan(0);
+  // המתנה להצגת המשימה
+  const taskText = await screen.findByText("Buy cheese");
+  expect(taskText).toBeInTheDocument();
+
+  // וידוא קטגוריה בתוך אותו פריט (li)
+  const li = taskText.closest("li");
+  expect(li).toHaveTextContent(/Shopping/i);
 });

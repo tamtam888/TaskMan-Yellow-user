@@ -20,7 +20,6 @@ function TaskInput({ onAddTask }) {
       alert("Please enter all fields: mission, priority, category, and deadline!");
       return;
     }
-
     if (Object.prototype.toString.call(deadline) !== "[object Date]" || isNaN(deadline)) {
       alert("Invalid date format. Please enter a valid date.");
       return;
@@ -42,6 +41,22 @@ function TaskInput({ onAddTask }) {
     
 
     // איפוס השדות
+
+    // כמו בגרסה שעבדה: מפצלים בפסיקים ושולחים כ-array
+    const participantsArray = (participants || "")
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    onAddTask(
+      trimmedValue,
+      priority,
+      creationDate,
+      category,
+      deadlineFormatted,
+      participantsArray
+    );
+
     setInputValue("");
     setPriority("");
     setCategory("");

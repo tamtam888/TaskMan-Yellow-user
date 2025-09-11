@@ -148,6 +148,7 @@
   white-space: normal;
   word-break: break-word;
 }
+
 .task-users {
   font-size: 12px;
   color: #333;
@@ -170,4 +171,11 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+.task-participants {
+  margin-inline-start: 8px;
+  white-space: nowrap;
+}
+.task-participants {
+  margin-inline-start: 8px;
+  white-space: nowrap;
 }

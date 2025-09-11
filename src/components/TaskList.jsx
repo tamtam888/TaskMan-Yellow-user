@@ -16,9 +16,12 @@ function TaskList({
     return task.category === tab;
   });
 
+  console.log("[TaskList] render count:", filteredTasks.length); // לוג אימות
+
   return (
     <ul className="task-list">
       {filteredTasks.map((task) => (
+
         <div key={task.id} className="task-list-item">
           <TaskItem
             task={task}
@@ -28,6 +31,17 @@ function TaskList({
             onEdit={onEditTask} //  כדי שהתעדכון ישפיע בפועל
           />
         </div>
+
+        // ❌ בלי <li> כאן, כי TaskItem כבר מחזיר <li>
+        <TaskItem
+          key={task.id}
+          task={task}
+          onToggle={toggleTaskCompleted}
+          onDelete={() => removeTask(task.id)}
+          eatingTaskId={eatingTaskId}
+          onEdit={onEditTask}
+        />
+
       ))}
     </ul>
   );
