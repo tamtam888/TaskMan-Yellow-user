@@ -32,5 +32,9 @@ jobs:
       - name: 🧱 Build and push Docker image
         uses: docker/build-push-action@v4
         with:
+          context: .
+          file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/taskman-app:latest
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/taskman-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/taskman-app:${{ github.sha }}
