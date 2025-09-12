@@ -8,19 +8,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write   # כדי לאפשר push ל־gh-pages
 
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: "npm"
 
       - name: 📦 Install dependencies
         run: npm ci
@@ -28,15 +25,18 @@ jobs:
       - name: 🛠️ Build React app
         run: npm run build
 
-      # יצירת Docker image (רק אם תרצי לשמור אותו ב־DockerHub)
       - name: 🐳 Build Docker image
         run: docker build -t taskman-app .
 
-      # שלב פריסה ל־GitHub Pages
-      - name: 🚀 Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # אופציונלי – אם רוצים לדחוף ל-DockerHub
+      - name: 🐳 Push Docker image to DockerHub
+        uses: docker/build-push-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          publish_branch: gh-pages
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/taskman-app:latest
+
+      # שלב פריסה ל-Vercel
+      - name: 🚀 Trigger Vercel Deploy
+        run: |
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
 
