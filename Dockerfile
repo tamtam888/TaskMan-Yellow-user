@@ -1,50 +1,35 @@
- feature-participants
-# Step 1: Build the React app
+# ======================
+# Stage 1: Build React app
+# ======================
 FROM node:18-alpine AS builder
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json ./
-RUN npm install
-
-# Copy the rest of the app's source code
-COPY . .
-
-# Build the React app
-RUN npm run build
-
-# Step 2: Serve the built app with Nginx
-FROM nginx:alpine
-
-# Remove default nginx static files
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy build output from previous stage
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Copy custom nginx config if needed (optional)
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port 80
-EXPOSE 80
-
-# Start nginx when the container starts
-
-# שלב 1: Build עם Node
-FROM node:18-alpine AS builder
-WORKDIR /app
+# Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
+
+# Copy source and build
 COPY . .
 RUN npm run build
 
-# שלב 2: Serve עם Nginx
+# ======================
+# Stage 2: Serve with Nginx
+# ======================
 FROM nginx:alpine
+
+# Clean default nginx content
 RUN rm -rf /usr/share/nginx/html/*
+
+# Copy build output from builder
 COPY --from=builder /app/build /usr/share/nginx/html
+
+# Copy custom nginx config (optional, see below)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port
 EXPOSE 80
- main
+
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
