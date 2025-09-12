@@ -165,16 +165,13 @@
 .task-deadline {
   margin-inline-start: 6px;
 }
-
 .task-text-container {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-.task-participants {
-  margin-inline-start: 8px;
-  white-space: nowrap;
 }
+
 .task-participants {
   margin-inline-start: 8px;
   white-space: nowrap;
