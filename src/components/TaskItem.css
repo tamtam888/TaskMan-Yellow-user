@@ -7,6 +7,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;          /* ✅ מאפשר שבירה במסכים קטנים */
+  width: 100%;
+  box-sizing: border-box;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
   transition: border 0.3s ease, box-shadow 0.3s ease;
   background-image: repeating-linear-gradient(
@@ -94,7 +97,6 @@
   width: 100%;
 }
 
-
 /* 🖉 כפתור עריכה */
 .edit-btn {
   position: absolute;
@@ -138,41 +140,62 @@
   gap: 8px;
   justify-content: flex-start;
 }
+
 .edit-form input[type="text"][placeholder*="DD/MM/YYYY"] {
   direction: rtl !important;
   text-align: right !important;
   unicode-bidi: plaintext;
 }
+
+/* ✅ טקסט המשימה */
 .task-text {
-  display: block;
+  flex: 1;
+  min-width: 0;
   white-space: normal;
   word-break: break-word;
+  display: block;
+}
+
+.task-text-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .task-users {
   font-size: 12px;
   color: #333;
   margin-inline-start: 6px;
-  white-space: nowrap;
   direction: rtl;
   display: inline-block;
   vertical-align: middle;
   max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .task-deadline {
   margin-inline-start: 6px;
 }
-.task-text-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
 
 .task-participants {
   margin-inline-start: 8px;
   white-space: nowrap;
+}
+
+/* 📱 התאמות למסכים קטנים */
+@media (max-width: 600px) {
+  .task-item {
+    font-size: 13px;
+    padding: 20px 12px;
+    gap: 6px;
+  }
+
+  .task-users {
+    max-width: 100px;
+  }
 }
