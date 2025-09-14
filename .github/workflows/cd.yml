@@ -20,14 +20,25 @@ jobs:
           cache: "npm"
 
       - name: 📦 Install dependencies
-        run: npm install   # יותר בטוח מ-npm ci
+        run: npm install   # ✅ סינכרון בטוח
 
       - name: 🛠️ Build React app
         run: npm run build
 
-      # שלב פריסה ל-Vercel (רק אם יש hook)
+      - name: 🐳 Build Docker image
+        run: docker build -t taskman-app .
+
+      # אופציונלי – אם יש DockerHub
+      - name: 🐳 Push Docker image to DockerHub
+        if: success() && env.DOCKER_USERNAME != '' && env.DOCKER_PASSWORD != ''
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/taskman-app:latest
+
+      # שלב פריסה ל-Vercel (דורש secret בשם VERCEL_DEPLOY_HOOK)
       - name: 🚀 Trigger Vercel Deploy
-        if: success()      # ירוץ רק אם ה-build הצליח
+        if: success() && env.VERCEL_DEPLOY_HOOK != ''
         run: |
           curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
 
