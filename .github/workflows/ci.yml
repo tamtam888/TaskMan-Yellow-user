@@ -14,22 +14,20 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: 🟢 Node 18 + cache
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "npm"
 
       - name: 📦 Install dependencies
-        run: npm install   # יותר בטוח מ-npm ci
+        run: npm install   # ✅ במקום npm ci
 
-      # רק אם יש lint ב-package.json
       - name: 🔎 Run lint
-        run: npm run lint || echo "⚠️ No lint script"
+        run: npm run lint || echo "⚠️ No lint script found"
 
-      # רק אם יש טסטים
       - name: 🧪 Run tests
-        run: npm test -- --watchAll=false || echo "⚠️ No tests"
+        run: npm test -- --watchAll=false || echo "⚠️ No tests found"
 
       - name: 🛠️ Build
         run: npm run build
@@ -39,5 +37,4 @@ jobs:
         with:
           name: taskman-build
           path: build
-
 
