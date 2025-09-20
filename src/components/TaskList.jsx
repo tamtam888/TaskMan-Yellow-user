@@ -16,11 +16,11 @@ function TaskList({
     .filter((task) => {
       if (tab === "all") return true;
       if (tab === "done") return task.completed;
-      return task.category === tab;
+      return task.category?.toLowerCase() === tab.toLowerCase();
     })
     .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 
-  console.log("[TaskList] render count:", filteredTasks.length);
+  console.log("[TaskList] render count:", filteredTasks.length, "tab:", tab);
 
   return (
     <ul className="task-list">
