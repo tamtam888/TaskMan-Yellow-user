@@ -11,7 +11,6 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
   const actualTasks = externalSetTasks ? tasks : internalTasks;
   const setTasks = externalSetTasks || internalSetTasks;
 
-  // ✅ פונקציה יחידה להוספת משימה
   const addTask = (text, priority, date, category, deadline, participants) => {
     console.log("[TodoApp] addTask() received:", {
       text,
@@ -44,15 +43,15 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       text,
       priority,
       completed: false,
-      date,       // DD/MM/YYYY
-      deadline,   // DD/MM/YYYY
+      date,
+      deadline,
       category,
-      users: usersArray,                // עריכה
-      participants: participantsString, // תצוגה
+      users: usersArray,
+      participants: participantsString,
     };
 
     console.log("[TodoApp] Task created:", newTask);
-    setTasks((prev) => [newTask, ...prev]); // חשוב: פונקציונלי
+    setTasks((prev) => [newTask, ...prev]);
   };
 
   const toggleTaskCompleted = (id) => {
@@ -102,4 +101,3 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
-
