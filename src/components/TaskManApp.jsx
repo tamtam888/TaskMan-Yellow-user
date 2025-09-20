@@ -31,7 +31,6 @@ const TaskManApp = ({
     audio.play();
   };
 
-  // מקבל participants כמערך/מחרוזת ושומר גם users וגם participants
   const handleAddTask = (text, priority, date, category, deadline, participants) => {
     console.log("[TaskManApp] handleAddTask received participants:", participants);
 
@@ -55,8 +54,8 @@ const TaskManApp = ({
       category,
       deadline,
       completed: false,
-      users: usersArray,                // 👥 לעריכה
-      participants: participantsString, // 👥 לתצוגה
+      users: usersArray,
+      participants: participantsString,
     };
 
     setTasks((prev) => [...prev, newTask]);
@@ -138,16 +137,6 @@ const TaskManApp = ({
     }
   }, [tasks]);
 
-  const priorityOrder = { high: 1, normal: 2, low: 3 };
-
-  const filteredTasks = tasks
-    .filter((task) => {
-      if (tab === "all") return true;
-      if (tab === "done") return task.completed;
-      return task.category === tab;
-    })
-    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
-
   return (
     <div className="todo-container">
       <Title />
@@ -171,7 +160,7 @@ const TaskManApp = ({
         </div>
       ) : (
         <TaskList
-          tasks={filteredTasks}
+          tasks={tasks}
           removeTask={handleRemoveTask}
           toggleTaskCompleted={handleToggleTaskCompleted}
           eatingTaskId={eatingTaskId}
