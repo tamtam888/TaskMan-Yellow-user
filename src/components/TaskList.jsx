@@ -10,13 +10,17 @@ function TaskList({
   tab,
   onEditTask,
 }) {
-  const filteredTasks = tasks.filter((task) => {
-    if (tab === "all") return true;
-    if (tab === "done") return task.completed;
-    return task.category === tab;
-  });
+  const priorityOrder = { high: 1, normal: 2, low: 3 };
 
-  console.log("[TaskList] render count:", filteredTasks.length); // לוג אימות
+  const filteredTasks = tasks
+    .filter((task) => {
+      if (tab === "all") return true;
+      if (tab === "done") return task.completed;
+      return task.category === tab;
+    })
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+  console.log("[TaskList] render count:", filteredTasks.length);
 
   return (
     <ul className="task-list">
@@ -27,7 +31,7 @@ function TaskList({
             onToggle={toggleTaskCompleted}
             onDelete={() => removeTask(task.id)}
             eatingTaskId={eatingTaskId}
-            onEdit={onEditTask} // כדי שהתעדכון ישפיע בפועל
+            onEdit={onEditTask}
           />
         </div>
       ))}
