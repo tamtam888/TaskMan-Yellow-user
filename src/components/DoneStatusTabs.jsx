@@ -1,7 +1,7 @@
 import React from "react";
 import "./Tabs.css";
 
-export default function DoneStatusTabs({ tab, setTab }) {
+export default function Tabs({ tab, setTab }) {
   return (
     <div className="tabs-container">
       <button
@@ -11,8 +11,8 @@ export default function DoneStatusTabs({ tab, setTab }) {
         All
       </button>
       <button
-        onClick={() => setTab("Shopping")}
-        className={`tab-button ${tab === "Shopping" ? "active" : ""}`}
+        onClick={() => setTab("shopping")}
+        className={`tab-button ${tab === "shopping" ? "active" : ""}`}
       >
         🛒 Shopping
       </button>
