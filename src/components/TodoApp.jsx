@@ -28,9 +28,7 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 
   const toggleTaskCompleted = (id) => {
     setTasks((prev) =>
-      prev.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
     );
   };
 
@@ -59,12 +57,11 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       <TaskInput onAddTask={addTask} />
       <Tabs activeTab={tab} onTabChange={setTab} />
 
-      {/* ✨ שולחים גם את tab ל-TaskList */}
       <TaskList
         tasks={actualTasks}
         toggleTaskCompleted={toggleTaskCompleted}
         removeTask={removeTask}
-        tab={tab}
+        tab={tab}   // ✨ חשוב - שולחים גם כאן
         onEditTask={handleEditTask}
       />
 
@@ -74,4 +71,5 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
+
 
