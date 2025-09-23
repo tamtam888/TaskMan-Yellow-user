@@ -55,13 +55,14 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       </header>
 
       <TaskInput onAddTask={addTask} />
-      <Tabs activeTab={tab} onTabChange={setTab} />
+      {/* ✅ שינוי כאן */}
+      <Tabs tab={tab} setTab={setTab} />
 
       <TaskList
         tasks={actualTasks}
         toggleTaskCompleted={toggleTaskCompleted}
         removeTask={removeTask}
-        tab={tab}   // ✨ חשוב - שולחים גם כאן
+        tab={tab}
         onEditTask={handleEditTask}
       />
 
@@ -71,5 +72,6 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
+
 
 
