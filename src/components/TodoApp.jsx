@@ -12,32 +12,6 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
   const setTasks = externalSetTasks || internalSetTasks;
 
   const addTask = (text, priority, date, category, deadline, participants) => {
-    console.log("[TodoApp] addTask() received:", {
-      text,
-      priority,
-      date,
-      category,
-      deadline,
-      participants,
-    });
-
-    let usersArray = [];
-    let participantsString = "";
-
-    if (Array.isArray(participants)) {
-      usersArray = participants
-        .filter(Boolean)
-        .map((s) => String(s).trim())
-        .filter(Boolean);
-      participantsString = usersArray.join(", ");
-    } else if (typeof participants === "string") {
-      const p = participants.trim();
-      usersArray = p
-        ? p.split(",").map((s) => s.trim()).filter(Boolean)
-        : [];
-      participantsString = usersArray.join(", ");
-    }
-
     const newTask = {
       id: Date.now().toString(),
       text,
@@ -46,11 +20,9 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       date,
       deadline,
       category,
-      users: usersArray,
-      participants: participantsString,
+      users: [],
+      participants: participants || "",
     };
-
-    console.log("[TodoApp] Task created:", newTask);
     setTasks((prev) => [newTask, ...prev]);
   };
 
@@ -87,6 +59,7 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
       <TaskInput onAddTask={addTask} />
       <Tabs activeTab={tab} onTabChange={setTab} />
 
+      {/* ✨ שולחים גם את tab ל-TaskList */}
       <TaskList
         tasks={actualTasks}
         toggleTaskCompleted={toggleTaskCompleted}
@@ -101,3 +74,4 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
 }
 
 export default TodoApp;
+
