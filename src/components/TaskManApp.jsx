@@ -32,8 +32,6 @@ const TaskManApp = ({
   };
 
   const handleAddTask = (text, priority, date, category, deadline, participants) => {
-    console.log("[TaskManApp] handleAddTask received participants:", participants);
-
     let usersArray = [];
     let participantsString = "";
 
@@ -164,7 +162,7 @@ const TaskManApp = ({
           removeTask={handleRemoveTask}
           toggleTaskCompleted={handleToggleTaskCompleted}
           eatingTaskId={eatingTaskId}
-          tab={tab}
+          tab={tab}   // ✨ גם כאן שולחים
           onEditTask={handleEditTask}
         />
       )}
@@ -175,3 +173,4 @@ const TaskManApp = ({
 };
 
 export default TaskManApp;
+
