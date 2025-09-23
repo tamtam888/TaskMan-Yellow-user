@@ -14,27 +14,11 @@ function TaskList({
 
   const filteredTasks = tasks
     .filter((task) => {
-      const taskCategory = (task.category || "").toLowerCase();
-      const currentTab = (tab || "").toLowerCase();
-
-      if (currentTab === "all") return true;
-      if (currentTab === "done") return task.completed;
-      return taskCategory === currentTab;
+      if (tab === "all") return true;
+      if (tab === "done") return task.completed;
+      return task.category?.toLowerCase() === tab.toLowerCase();
     })
-    .sort((a, b) => {
-      const aPriority = priorityOrder[a.priority] || 99;
-      const bPriority = priorityOrder[b.priority] || 99;
-      return aPriority - bPriority;
-    });
-
-  console.log(
-    "[TaskList] render count:",
-    filteredTasks.length,
-    "tab:",
-    tab,
-    "categories:",
-    tasks.map((t) => t.category)
-  );
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
 
   return (
     <ul className="task-list">
