@@ -151,7 +151,60 @@ const TaskManApp = ({
     }
   }, [tasks]);
 
-  const priorityOrder = { high:
+  const priorityOrder = { high: 1, normal: 2, low: 3 };
+
+  const filteredTasks = tasks
+    .filter((task) => {
+      if (tab === "all") return true;
+      if (tab === "done") return task.completed;
+      return task.category === tab;
+    })
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+  return (
+    <div className="todo-container">
+      <Title />
+      {showLevelUp && (
+        <div className="levelup-banner">🏆 LEVEL UP! Level {level}</div>
+      )}
+
+      <div className="score">
+        🎯 Score: {score} 🔥 Level: {level}
+      </div>
+
+      <TaskInput onAddTask={handleAddTask} />
+      <DoneStatusTabs tab={tab} setTab={setTab} />
+
+      {gameOver ? (
+        <div className="game-over-banner">
+          🎉 Game Over 🎉 All Tasks Completed 🏆
+          <button className="restart-button" onClick={handleRestart}>
+            ▶️ Play Again
+          </button>
+        </div>
+      ) : (
+        <TaskList
+          tasks={filteredTasks}
+          removeTask={handleRemoveTask}
+          toggleTaskCompleted={handleToggleTaskCompleted}
+          eatingTaskId={eatingTaskId}
+          tab={tab}
+          onEditTask={handleEditTask}
+        />
+      )}
+
+      {/* ✅ סנכרון ליומן */}
+      <div className="calendar-sync-container">
+        <CalendarSync tasks={filteredTasks} />
+      </div>
+
+      <div className="signature">© TM by TK ~ 2025</div>
+    </div>
+  );
+};
+
+export default TaskManApp;
+
 
 
 
