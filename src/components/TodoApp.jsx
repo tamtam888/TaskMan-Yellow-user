@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
 import Tabs from "./DoneStatusTabs";
-import CalendarSync from "./CalendarSync";
+import CalendarSync from "./CalendarSync"; // ✅ תיקון import
 import "../App.css";
 
 function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
@@ -47,13 +47,16 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
         onDeleteTask={removeTask}
         tab={tab}
       />
-      <CalendarSync tasks={actualTasks} /> {/* ✅ חדש */}
+
+      {/* ✅ שמנו את CalendarSync בסוף כדי לא לשבור עיצוב */}
+      <div className="calendar-sync-container">
+        <CalendarSync tasks={actualTasks} />
+      </div>
     </div>
   );
 }
 
 export default TodoApp;
-
 
 
 
