@@ -8,6 +8,7 @@ body {
   justify-content: center;
 }
 
+/* מבנה עיקרי */
 .app-body {
   background-color: #f8f4d1;
   color: brown;
@@ -84,6 +85,7 @@ ul {
   padding: 0 12px;
   box-sizing: border-box;
 }
+
 .welcome-text {
   font-weight: bold;
   font-size: 16px;
@@ -101,6 +103,12 @@ ul {
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
+.signout-button:hover {
+  background-color: #f2e287;
+  box-shadow: 0 4px 8px rgba(255, 200, 150, 0.2);
+}
+
 /* כפתור סנכרון ליומן */
 .calendar-sync-btn {
   background-color: #ffd700; /* זהב כמו כפתור יציאה */
@@ -129,10 +137,4 @@ ul {
     font-size: 13px;
     padding: 12px;
   }
-}
-
-
-.signout-button:hover {
-  background-color: #f2e287;
-  box-shadow: 0 4px 8px rgba(255, 200, 150, 0.2);
 }
