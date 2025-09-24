@@ -32,7 +32,7 @@ const TaskManApp = ({
     audio.play();
   };
 
-  // מקבל participants כמערך/מחרוזת ושומר גם users וגם participants
+  // ✅ הוספת משימה
   const handleAddTask = (
     text,
     priority,
@@ -41,8 +41,6 @@ const TaskManApp = ({
     deadline,
     participants
   ) => {
-    console.log("[TaskManApp] handleAddTask received participants:", participants);
-
     let usersArray = [];
     let participantsString = "";
 
@@ -68,8 +66,8 @@ const TaskManApp = ({
       category,
       deadline,
       completed: false,
-      users: usersArray, // 👥 לעריכה
-      participants: participantsString, // 👥 לתצוגה
+      users: usersArray,
+      participants: participantsString,
     };
 
     setTasks((prev) => [...prev, newTask]);
@@ -77,6 +75,7 @@ const TaskManApp = ({
     setGameOver(false);
   };
 
+  // ✅ מחיקת משימה
   const handleRemoveTask = (id) => {
     setTimeout(() => {
       setTasks((prev) => prev.filter((task) => task.id !== id));
@@ -84,6 +83,7 @@ const TaskManApp = ({
     playSound(deleteSound);
   };
 
+  // ✅ סימון משימה כהושלמה
   const handleToggleTaskCompleted = (id) => {
     let points = 0;
     setTasks((prevTasks) =>
@@ -123,6 +123,7 @@ const TaskManApp = ({
     );
   };
 
+  // ✅ עריכת משימה
   const handleEditTask = (updatedTask) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
@@ -131,6 +132,7 @@ const TaskManApp = ({
     );
   };
 
+  // ✅ התחלה מחדש
   const handleRestart = () => {
     setTasks([]);
     setScore(0);
@@ -144,6 +146,7 @@ const TaskManApp = ({
     }
   };
 
+  // ✅ מצב Game Over
   useEffect(() => {
     if (tasks.length > 0 && tasks.every((task) => task.completed)) {
       setGameOver(true);
@@ -151,6 +154,7 @@ const TaskManApp = ({
     }
   }, [tasks]);
 
+  // ✅ סדר עדיפויות
   const priorityOrder = { high: 1, normal: 2, low: 3 };
 
   const filteredTasks = tasks
@@ -204,7 +208,3 @@ const TaskManApp = ({
 };
 
 export default TaskManApp;
-
-
-
-
