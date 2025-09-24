@@ -1,176 +1,54 @@
-import React, { useState, useEffect } from "react";
-import Title from "./Title";
+import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
-import DoneStatusTabs from "./DoneStatusTabs";
-import "./TaskManApp.css";
+import CalendarSync from "./components/CalendarSync"; // ✅ חדש
+import "../App.css";
 
-// ✅ הפנייה לתיקיית public/sounds
-const addSound = process.env.PUBLIC_URL + "/sounds/add.mp3";
-const completeSound = process.env.PUBLIC_URL + "/sounds/complete.mp3";
-const deleteSound = process.env.PUBLIC_URL + "/sounds/trash.mp3";
-const levelupSound = process.env.PUBLIC_URL + "/sounds/levelup.mp3";
-const gameoverSound = process.env.PUBLIC_URL + "/sounds/gameover.mp3";
+function TaskManApp({ tasks = [], setTasks: externalSetTasks }) {
+  const [internalTasks, internalSetTasks] = useState(tasks);
 
-const TaskManApp = ({
-  tasks,
-  setTasks,
-  score,
-  setScore,
-  level,
-  setLevel,
-  user,
-}) => {
-  const [tab, setTab] = useState("all");
-  const [showLevelUp, setShowLevelUp] = useState(false);
-  const [eatingTaskId, setEatingTaskId] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
+  const actualTasks = externalSetTasks ? tasks : internalTasks;
+  const setTasks = externalSetTasks || internalSetTasks;
 
-  const playSound = (sound) => {
-    const audio = new Audio(sound);
-    audio.play();
-  };
-
-  const handleAddTask = (text, priority, date, category, deadline, participants) => {
-    let usersArray = [];
-    let participantsString = "";
-
-    if (Array.isArray(participants)) {
-      usersArray = participants.filter(Boolean).map((s) => String(s).trim()).filter(Boolean);
-      participantsString = usersArray.join(", ");
-    } else if (typeof participants === "string") {
-      const p = participants.trim();
-      usersArray = p ? p.split(",").map((s) => s.trim()).filter(Boolean) : [];
-      participantsString = usersArray.join(", ");
-    }
-
+  const addTask = (text, priority, date, category, deadline, participants) => {
     const newTask = {
-      id: Date.now(),
+      id: Date.now().toString(),
       text,
       priority,
-      date,
-      category,
-      deadline,
       completed: false,
-      users: usersArray,
-      participants: participantsString,
+      date,
+      deadline,
+      category,
+      users: [],
+      participants: participants || "",
     };
-
-    setTasks((prev) => [...prev, newTask]);
-    playSound(addSound);
-    setGameOver(false);
+    setTasks((prev) => [newTask, ...prev]);
   };
 
-  const handleRemoveTask = (id) => {
-    setTimeout(() => {
-      setTasks((prev) => prev.filter((task) => task.id !== id));
-    }, 300);
-    playSound(deleteSound);
-  };
-
-  const handleToggleTaskCompleted = (id) => {
-    let points = 0;
-    setTasks((prevTasks) =>
-      prevTasks.map((task) => {
-        if (task.id === id) {
-          if (task.priority === "high") points = 30;
-          else if (task.priority === "normal") points = 20;
-          else points = 10;
-
-          const updated = { ...task, completed: !task.completed };
-
-          if (updated.completed) {
-            const newScore = score + points;
-            setScore(newScore);
-
-            setEatingTaskId(id);
-            setTimeout(() => setEatingTaskId(null), 2000);
-            setTimeout(() => playSound(completeSound), 100);
-
-            const newLevel = Math.floor(newScore / 100) + 1;
-            if (newLevel > level) {
-              setLevel(newLevel);
-              setShowLevelUp(true);
-              playSound(levelupSound);
-              setTimeout(() => setShowLevelUp(false), 3000);
-            }
-          } else {
-            const newScore = score - points;
-            setScore(newScore);
-            setLevel(Math.max(1, Math.floor(newScore / 100)));
-          }
-
-          return updated;
-        }
-        return task;
-      })
+  const toggleTaskCompleted = (id) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
     );
   };
 
-  const handleEditTask = (updatedTask) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === updatedTask.id ? updatedTask : task
-      )
-    );
+  const removeTask = (id) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
   };
-
-  const handleRestart = () => {
-    setTasks([]);
-    setScore(0);
-    setLevel(1);
-    setGameOver(false);
-
-    if (user) {
-      localStorage.removeItem(`taskman-tasks-${user.email}`);
-      localStorage.removeItem(`taskman-score-${user.email}`);
-      localStorage.removeItem(`taskman-level-${user.email}`);
-    }
-  };
-
-  useEffect(() => {
-    if (tasks.length > 0 && tasks.every((task) => task.completed)) {
-      setGameOver(true);
-      playSound(gameoverSound);
-    }
-  }, [tasks]);
 
   return (
-    <div className="todo-container">
-      <Title />
-      {showLevelUp && (
-        <div className="levelup-banner">🏆 LEVEL UP! Level {level}</div>
-      )}
-
-      <div className="score">
-        🎯 Score: {score} 🔥 Level: {level}
-      </div>
-
-      <TaskInput onAddTask={handleAddTask} />
-      <DoneStatusTabs tab={tab} setTab={setTab} />
-
-      {gameOver ? (
-        <div className="game-over-banner">
-          🎉 Game Over 🎉 All Tasks Completed 🏆
-          <button className="restart-button" onClick={handleRestart}>
-            ▶️ Play Again
-          </button>
-        </div>
-      ) : (
-        <TaskList
-          tasks={tasks}
-          removeTask={handleRemoveTask}
-          toggleTaskCompleted={handleToggleTaskCompleted}
-          eatingTaskId={eatingTaskId}
-          tab={tab}   // ✨ גם כאן שולחים
-          onEditTask={handleEditTask}
-        />
-      )}
-
-      <div className="signature">© TM by TK ~ 2025</div>
+    <div className="taskman-app">
+      <h1>TaskMan</h1>
+      <TaskInput onAddTask={addTask} />
+      <TaskList
+        tasks={actualTasks}
+        onToggleTask={toggleTaskCompleted}
+        onDeleteTask={removeTask}
+      />
+      <CalendarSync tasks={actualTasks} /> {/* ✅ חדש */}
     </div>
   );
-};
+}
 
 export default TaskManApp;
+
 
