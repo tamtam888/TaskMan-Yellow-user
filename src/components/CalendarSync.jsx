@@ -4,7 +4,7 @@ import React from "react";
 /**
  * קומפוננטה פשוטה שמדגימה סנכרון משימות ליומן
  * בשלב ראשון – רק מציגה בלוגים (console.log)
- * בהמשך אפשר להוסיף חיבור ל-Google Calendar API
+ * בהמשך נוסיף חיבור ל-Google Calendar API
  */
 function CalendarSync({ tasks }) {
   const handleSync = () => {
@@ -18,9 +18,9 @@ function CalendarSync({ tasks }) {
   };
 
   return (
-    <div style={{ marginTop: "1rem" }}>
-      <button onClick={handleSync}>Sync Tasks to Calendar</button>
-    </div>
+    <button className="calendar-sync-btn" onClick={handleSync}>
+      📅 Sync Tasks to Calendar
+    </button>
   );
 }
 
