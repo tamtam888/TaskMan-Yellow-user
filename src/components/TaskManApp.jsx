@@ -6,7 +6,7 @@ import DoneStatusTabs from "./DoneStatusTabs";
 import CalendarSync from "./CalendarSync"; // ✅ חדש
 import "./TaskManApp.css";
 
-// ✅ הפנייה לתיקיית public/sounds
+// ✅ קבצי סאונד מתוך public/sounds
 const addSound = process.env.PUBLIC_URL + "/sounds/add.mp3";
 const completeSound = process.env.PUBLIC_URL + "/sounds/complete.mp3";
 const deleteSound = process.env.PUBLIC_URL + "/sounds/trash.mp3";
@@ -41,6 +41,8 @@ const TaskManApp = ({
     deadline,
     participants
   ) => {
+    console.log("[TaskManApp] handleAddTask received participants:", participants);
+
     let usersArray = [];
     let participantsString = "";
 
@@ -66,8 +68,8 @@ const TaskManApp = ({
       category,
       deadline,
       completed: false,
-      users: usersArray,
-      participants: participantsString,
+      users: usersArray, // 👥 לעריכה
+      participants: participantsString, // 👥 לתצוגה
     };
 
     setTasks((prev) => [...prev, newTask]);
@@ -83,7 +85,7 @@ const TaskManApp = ({
     playSound(deleteSound);
   };
 
-  // ✅ סימון משימה כהושלמה
+  // ✅ סימון משימה כבוצעה
   const handleToggleTaskCompleted = (id) => {
     let points = 0;
     setTasks((prevTasks) =>
@@ -146,7 +148,7 @@ const TaskManApp = ({
     }
   };
 
-  // ✅ מצב Game Over
+  // ✅ בדיקה אם כל המשימות הושלמו → Game Over
   useEffect(() => {
     if (tasks.length > 0 && tasks.every((task) => task.completed)) {
       setGameOver(true);
@@ -208,3 +210,4 @@ const TaskManApp = ({
 };
 
 export default TaskManApp;
+
