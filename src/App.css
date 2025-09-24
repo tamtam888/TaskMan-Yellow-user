@@ -101,6 +101,36 @@ ul {
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+/* כפתור סנכרון ליומן */
+.calendar-sync-btn {
+  background-color: #ffd700; /* זהב כמו כפתור יציאה */
+  border: 2px solid black;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 20px;
+  font-style: italic;
+  cursor: pointer;
+  margin-top: 16px;
+  width: 100%; /* יתפוס רוחב מלא במובייל */
+  max-width: 480px; /* לא יחרוג במחשב */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+}
+
+.calendar-sync-btn:hover {
+  background-color: #f2e287; /* צהוב בהיר יותר בהובר */
+  box-shadow: 0 4px 8px rgba(255, 200, 150, 0.2);
+}
+
+/* התאמה לנייד */
+@media (max-width: 600px) {
+  .calendar-sync-btn {
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
 
 .signout-button:hover {
   background-color: #f2e287;
