@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
-import CalendarSync from "./components/CalendarSync"; // ✅ חדש
+import CalendarSync from "./CalendarSync";
 import "../App.css";
 
 function TaskManApp({ tasks = [], setTasks: externalSetTasks }) {
