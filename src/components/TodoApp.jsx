@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
 import Tabs from "./DoneStatusTabs";
+import CalendarSync from "./CalendarSync";
 import "../App.css";
 
 function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
@@ -36,42 +37,23 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const handleEditTask = (updatedTask) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === updatedTask.id ? { ...t, ...updatedTask } : t))
-    );
-  };
-
   return (
-    <div className="todo-container">
-      <header className="title-header">
-        <div className="title-content">
-          <img src="/pacwhite.png" alt="Mdone Icon" className="dane-icon" />
-          <div>
-            <h1>TaskMan</h1>
-            <p className="subtitle">Your task guide to victory!</p>
-          </div>
-        </div>
-      </header>
-
+    <div className="todo-app">
       <TaskInput onAddTask={addTask} />
-      {/* ✅ שינוי כאן */}
       <Tabs tab={tab} setTab={setTab} />
-
       <TaskList
         tasks={actualTasks}
-        toggleTaskCompleted={toggleTaskCompleted}
-        removeTask={removeTask}
+        onToggleTask={toggleTaskCompleted}
+        onDeleteTask={removeTask}
         tab={tab}
-        onEditTask={handleEditTask}
       />
-
-      <div className="signature">© TM by TK ~ 2025</div>
+      <CalendarSync tasks={actualTasks} /> {/* ✅ חדש */}
     </div>
   );
 }
 
 export default TodoApp;
+
 
 
 
