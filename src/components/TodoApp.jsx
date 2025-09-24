@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
 import Tabs from "./DoneStatusTabs";
-import CalendarSync from "./components/CalendarSync"; // ✅ חדש
+import CalendarSync from "./CalendarSync";
 import "../App.css";
 
 function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
