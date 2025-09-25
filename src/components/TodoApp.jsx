@@ -43,10 +43,12 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
     );
   };
 
+  // ✅ תיקון פילטר – השוואה ב-lowercase
   const filteredTasks = actualTasks.filter((task) => {
-    if (tab === "all") return true;
-    if (tab === "done") return task.completed;
-    return task.category === tab;
+    if (!tab) return true;
+    if (tab.toLowerCase() === "all") return true;
+    if (tab.toLowerCase() === "done") return task.completed;
+    return (task.category || "").toLowerCase() === tab.toLowerCase();
   });
 
   return (
@@ -59,6 +61,9 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
         toggleTaskCompleted={toggleTaskCompleted}
         onEditTask={handleEditTask}
       />
+
+      {/* ✅ הוספתי חתימה כמו בגרסה של TaskMan */}
+      <div className="signature">© TM by TK ~ 2025</div>
     </div>
   );
 }
