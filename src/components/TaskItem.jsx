@@ -1,3 +1,4 @@
+// src/components/TaskItem.jsx
 import React, { useState } from "react";
 import "./TaskItem.css";
 
@@ -87,6 +88,16 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
     setEditedDeadline(v);
   };
 
+  // ✅ פונקציה לסנכרון ליומן (בינתיים לוג בלבד)
+  const handleSyncToCalendar = () => {
+    const deadlineForCalendar =
+      task.deadline && task.deadline !== ""
+        ? task.deadline
+        : new Date().toLocaleDateString("en-GB"); // היום אם אין דדליין
+    console.log(`📅 Syncing task "${task.text}" with deadline ${deadlineForCalendar} to Google Calendar...`);
+    // כאן תחברי ל-Google Calendar API בהמשך
+  };
+
   return (
     <li className={`task-list-item task-item ${task.priority} ${task.completed ? "completed" : ""}`}>
       {!isEditing && (
@@ -143,9 +154,7 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
 
           <span className="task-text">{task.text}</span>
 
-          {usersDisplay && (
-            <span className="task-users">🧑‍🤝‍🧑 {usersDisplay}</span>
-          )}
+          {usersDisplay && <span className="task-users">🧑‍🤝‍🧑 {usersDisplay}</span>}
 
           {task.deadline && (
             <span className="task-deadline">
@@ -157,7 +166,17 @@ function TaskItem({ task, onToggle, onDelete, eatingTaskId, onEdit }) {
 
           {task.date && <span className="task-date">{task.date}</span>}
 
+          {/* 🗑️ כפתור מחיקה */}
           <button onClick={() => onDelete(task.id)} title="Remove">🗑️</button>
+
+          {/* 📅 כפתור סנכרון ליומן */}
+          <button
+            className="sync-btn"
+            onClick={handleSyncToCalendar}
+            title="Sync to Google Calendar"
+          >
+            📅
+          </button>
 
           {eatingTaskId === task.id && (
             <img src="/taskman-transparent.png" alt="Eating" className="dane-eat" />
