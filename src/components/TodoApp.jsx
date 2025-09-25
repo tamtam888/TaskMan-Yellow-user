@@ -1,8 +1,8 @@
+// src/components/TodoApp.jsx
 import React, { useState } from "react";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
-import Tabs from "./DoneStatusTabs";
-import CalendarSync from "./CalendarSync"; // ✅ תיקון import
+import DoneStatusTabs from "./DoneStatusTabs";
 import "../App.css";
 
 function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
@@ -37,26 +37,32 @@ function TodoApp({ tasks = [], setTasks: externalSetTasks }) {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  return (
-    <div className="todo-app">
-      <TaskInput onAddTask={addTask} />
-      <Tabs tab={tab} setTab={setTab} />
-      <TaskList
-        tasks={actualTasks}
-        onToggleTask={toggleTaskCompleted}
-        onDeleteTask={removeTask}
-        tab={tab}
-      />
+  const handleEditTask = (updatedTask) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+    );
+  };
 
-      {/* ✅ שמנו את CalendarSync בסוף כדי לא לשבור עיצוב */}
-      <div className="calendar-sync-container">
-        <CalendarSync tasks={actualTasks} />
-      </div>
+  const filteredTasks = actualTasks.filter((task) => {
+    if (tab === "all") return true;
+    if (tab === "done") return task.completed;
+    return task.category === tab;
+  });
+
+  return (
+    <div className="todo-container">
+      <TaskInput onAddTask={addTask} />
+      <DoneStatusTabs tab={tab} setTab={setTab} />
+      <TaskList
+        tasks={filteredTasks}
+        removeTask={removeTask}
+        toggleTaskCompleted={toggleTaskCompleted}
+        onEditTask={handleEditTask}
+      />
     </div>
   );
 }
 
 export default TodoApp;
-
 
 
