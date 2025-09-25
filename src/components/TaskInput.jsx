@@ -1,3 +1,4 @@
+// src/components/TaskInput.jsx
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
@@ -35,7 +36,6 @@ function TaskInput({ onAddTask }) {
     const creationDate = format(now, "dd/MM/yyyy");
     const deadlineFormatted = format(deadlineDate, "dd/MM/yyyy");
 
-    // מפצלים את המשתתפים לפסיקים ושומרים כ-array
     const participantsArray = (participants || "")
       .split(",")
       .map((p) => p.trim())
@@ -52,7 +52,6 @@ function TaskInput({ onAddTask }) {
       participantsArray
     );
 
-    // איפוס השדות
     setInputValue("");
     setPriority("");
     setCategory("");
@@ -89,7 +88,7 @@ function TaskInput({ onAddTask }) {
         aria-label="Category"
       >
         <option value="" disabled hidden>- Choose category -</option>
-        <option value="Shopping">🛒 Shopping</option>
+        <option value="shopping">🛒 Shopping</option>
         <option value="mission">📋 Mission</option>
         <option value="other">💡 Other</option>
       </select>
@@ -118,4 +117,5 @@ function TaskInput({ onAddTask }) {
 }
 
 export default TaskInput;
+
 
