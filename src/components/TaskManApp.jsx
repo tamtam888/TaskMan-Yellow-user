@@ -3,7 +3,6 @@ import Title from "./Title";
 import TaskInput from "./TaskInput";
 import TaskList from "./TaskList";
 import DoneStatusTabs from "./DoneStatusTabs";
-import CalendarSync from "./CalendarSync"; // ✅ חדש
 import "./TaskManApp.css";
 
 // ✅ קבצי סאונד מתוך public/sounds
