@@ -14,25 +14,34 @@ function TaskList({
 
   const filteredTasks = tasks
     .filter((task) => {
-      if (tab === "all") return true;
-      if (tab === "done") return task.completed;
-      return task.category?.toLowerCase() === tab.toLowerCase();
+      if (!tab) return true; // ✅ הגנה על undefined/null
+      if (tab.toLowerCase() === "all") return true;
+      if (tab.toLowerCase() === "done") return task.completed;
+
+      // ✅ השוואה בטוחה עם ברירת מחדל ריקה
+      return (task.category || "").toLowerCase() === tab.toLowerCase();
     })
-    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+    .sort((a, b) => (priorityOrder[a.priority] || 99) - (priorityOrder[b.priority] || 99));
 
   return (
     <ul className="task-list">
-      {filteredTasks.map((task) => (
-        <div key={task.id} className="task-list-item">
-          <TaskItem
-            task={task}
-            onToggle={toggleTaskCompleted}
-            onDelete={() => removeTask(task.id)}
-            eatingTaskId={eatingTaskId}
-            onEdit={onEditTask}
-          />
-        </div>
-      ))}
+      {filteredTasks.length > 0 ? (
+        filteredTasks.map((task) => (
+          <li key={task.id} className="task-list-item">
+            <TaskItem
+              task={task}
+              onToggle={toggleTaskCompleted}
+              onDelete={() => removeTask(task.id)}
+              eatingTaskId={eatingTaskId}
+              onEdit={onEditTask}
+            />
+          </li>
+        ))
+      ) : (
+        <li style={{ textAlign: "center", color: "#666", fontStyle: "italic" }}>
+          No tasks found
+        </li>
+      )}
     </ul>
   );
 }
