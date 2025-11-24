@@ -1,13 +1,9 @@
-// src/components/CalendarSync.jsx
+// src/components/CalendarSync.js
 import React, { useState } from "react";
 
 /**
  * קומפוננטה לסנכרון משימות ליומן Google
- * שודרג מהקוד המקורי עם:
- * - קריאה אמיתית ל-Google Calendar API
- * - Error handling מלא
- * - User feedback (loading, success, error)
- * - Validation של inputs
+ * כולל תמיכה בהוספת משתתפים - כל משתתף מקבל הזמנה ביומן שלו
  */
 function CalendarSync({ tasks, accessToken }) {
   const [syncing, setSyncing] = useState(false);
@@ -87,40 +83,40 @@ function CalendarSync({ tasks, accessToken }) {
  */
 async function addTaskToCalendar(task, accessToken) {
   const deadlineDate = new Date(task.deadline);
+  
+  // פורמט התאריך ליום שלם (YYYY-MM-DD)
+  const dateString = deadlineDate.toISOString().split('T')[0];
 
-  // אם אין שעה, נגדיר ל-9:00 בבוקר
-  if (deadlineDate.getHours() === 0 && deadlineDate.getMinutes() === 0) {
-    deadlineDate.setHours(9, 0, 0);
-  }
-
-  // סוף האירוע - שעה אחת אחרי ההתחלה
-  const endDate = new Date(deadlineDate.getTime() + 60 * 60 * 1000);
-
-  // יצירת אירוע בפורמט Google Calendar
+  // יצירת אירוע של יום שלם (All-day event)
   const event = {
     summary: `📋 ${task.text}`,
     description: buildDescription(task),
     start: {
-      dateTime: deadlineDate.toISOString(),
-      timeZone: "Asia/Jerusalem",
+      date: dateString, // רק תאריך, בלי שעה
     },
     end: {
-      dateTime: endDate.toISOString(),
-      timeZone: "Asia/Jerusalem",
+      date: dateString, // אותו תאריך
     },
+    // ⭐⭐⭐ הוספת משתתפים - כל אחד יקבל הזמנה ביומן שלו! ⭐⭐⭐
+    attendees: task.participants && task.participants.length > 0
+      ? task.participants.map(email => ({ 
+          email: email.trim(),
+          responseStatus: 'needsAction'
+        }))
+      : undefined,
     reminders: {
       useDefault: false,
       overrides: [
-        { method: "popup", minutes: 24 * 60 }, // יום לפני
-        { method: "popup", minutes: 60 },      // שעה לפני
+        { method: "popup", minutes: 0 }, // תזכורת ביום עצמו בבוקר
       ],
     },
     colorId: getPriorityColor(task.priority),
   };
 
   // שליחת הבקשה ל-Google Calendar API
+  // ⭐ sendUpdates=all שולח הזמנות אוטומטית לכל המשתתפים
   const response = await fetch(
-    "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+    "https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates=all",
     {
       method: "POST",
       headers: {
